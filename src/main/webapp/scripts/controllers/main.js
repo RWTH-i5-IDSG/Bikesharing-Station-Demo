@@ -179,7 +179,6 @@ angular.module('demoStationApp')
             chargingStatusNotification.meterValue = slot.pedelec.meterValue;
             chargingStatusNotification.battery = slot.pedelec.battery;
 
-
             console.log(chargingStatusNotification);
             showAlert('Send "Charging Status Notification" for Pedelec "' + slot.pedelec.pedelecManufacturerId + '"');
         };

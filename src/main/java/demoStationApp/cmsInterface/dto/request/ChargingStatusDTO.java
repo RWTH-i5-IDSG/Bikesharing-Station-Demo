@@ -1,4 +1,4 @@
-package demoStationApp.cmsInterface.dto;
+package demoStationApp.cmsInterface.dto.request;
 
 import demoStationApp.domain.Battery;
 import lombok.Data;

@@ -1,7 +1,8 @@
 package demoStationApp.cmsInterface.controller;
 
-import demoStationApp.cmsInterface.dto.ChargingStatusDTO;
-import demoStationApp.cmsInterface.dto.UploadLogsDTO;
+import demoStationApp.cmsInterface.dto.response.BootConfirmationDTO;
+import demoStationApp.cmsInterface.dto.request.ChargingStatusDTO;
+import demoStationApp.cmsInterface.dto.request.UploadLogsDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.cmsInterface.service.CentralManagementSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class CentralManagementSystemController {
     }
 
     @RequestMapping(value = "/reboot", method = RequestMethod.POST)
-    public void reboot(@PathVariable String stationManufacturerId) throws  CMSInterfaceException {
-
+    public BootConfirmationDTO reboot(@PathVariable String stationManufacturerId) throws  CMSInterfaceException {
+        return centralManagementSystemService.sendBootNotification(stationManufacturerId);
     }
 
     @RequestMapping(value = "/unlock/{slotPosition}", method = RequestMethod.POST)

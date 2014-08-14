@@ -1,7 +1,7 @@
 package demoStationApp.cmsInterface.service;
 
-import demoStationApp.cmsInterface.dto.AuthorizeDTO;
-import demoStationApp.domain.Pedelec;
+import demoStationApp.cmsInterface.dto.request.AuthorizeDTO;
+import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
 import demoStationApp.repository.PedelecRepository;
@@ -9,8 +9,6 @@ import demoStationApp.repository.SlotRepository;
 import demoStationApp.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by swam on 11/08/14.
@@ -28,10 +26,15 @@ public class AuthorizeService {
     @Autowired
     private PedelecRepository pedelecRepository;
 
-    public void removePedelec(String stationManufacturerId, AuthorizeDTO authorizeDTO) {
+    public void removePedelec(String stationManufacturerId, AuthorizeDTO authorizeDTO) throws CMSInterfaceException {
+
         Station station = stationRepository.findOne(stationManufacturerId);
 
         Slot slot = slotRepository.findBySlotPositionAndStation(authorizeDTO.getSlotPosition(), station);
+
+        if (slot == null || station == null) {
+            throw  new CMSInterfaceException("Slot or Station not found", "not defined");
+        }
 
         slot.getPedelec().setSlot(null);
         slot.getPedelec().setOwner(authorizeDTO.getUserId());
@@ -41,5 +44,4 @@ public class AuthorizeService {
 
         slotRepository.save(slot);
     }
-
 }

@@ -1,6 +1,6 @@
 package demoStationApp.cmsInterface.controller;
 
-import demoStationApp.cmsInterface.dto.AuthorizeDTO;
+import demoStationApp.cmsInterface.dto.request.AuthorizeDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.cmsInterface.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;

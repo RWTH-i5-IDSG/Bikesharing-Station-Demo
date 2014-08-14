@@ -1,7 +1,7 @@
 package demoStationApp.cmsInterface.controller;
 
-import demoStationApp.cmsInterface.dto.ChangeStationOperationStateDTO;
-import demoStationApp.cmsInterface.dto.StationConfigurationDTO;
+import demoStationApp.cmsInterface.dto.request.ChangeStationOperationStateDTO;
+import demoStationApp.cmsInterface.dto.request.StationConfigurationDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.cmsInterface.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,11 @@ public class StationController {
     @RequestMapping(value = "/state", method = RequestMethod.POST)
     public void changeStationOperationState(@PathVariable String stationManufacturerId, @RequestBody ChangeStationOperationStateDTO changeStationOperationStateDTO) throws CMSInterfaceException {
         stationService.setStationOperationState(stationManufacturerId, changeStationOperationStateDTO);
+    }
+
+    @RequestMapping(value = "/sendStationStatusNotification", method = RequestMethod.POST)
+    public void sendStationStatusNotification(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
+        stationService.sendStationStatusNotification(stationManufacturerId);
     }
 
 }
