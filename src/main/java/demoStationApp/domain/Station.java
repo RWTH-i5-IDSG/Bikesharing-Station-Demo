@@ -26,7 +26,7 @@ public class Station implements Serializable{
     private String firmwareVersion;
     private String stationErrorCode;
     private String stationInfo;
-    private String stationState;
+    private OperationState stationState;
     private Integer heartbeatInterval;
     @JsonIgnore
     private String cmsURI;

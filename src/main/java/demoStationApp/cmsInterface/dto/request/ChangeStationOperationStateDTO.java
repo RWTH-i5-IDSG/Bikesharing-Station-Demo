@@ -1,5 +1,6 @@
 package demoStationApp.cmsInterface.dto.request;
 
+import demoStationApp.domain.OperationState;
 import lombok.Data;
 
 /**
@@ -9,5 +10,5 @@ import lombok.Data;
 @Data
 public class ChangeStationOperationStateDTO {
     private Integer slotPosition;
-    private String state;
+    private OperationState state;
 }

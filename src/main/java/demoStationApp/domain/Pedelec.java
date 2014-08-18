@@ -23,7 +23,7 @@ public class Pedelec {
     private String pedelecManufacturerId;
     private String pedelecErrorCode;
     private String pedelecInfo;
-    private String pedelecState;
+    private OperationState pedelecState;
     private String chargingState;
     private Double meterValue;
 

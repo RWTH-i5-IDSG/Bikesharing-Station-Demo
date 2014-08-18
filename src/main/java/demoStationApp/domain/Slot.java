@@ -24,7 +24,7 @@ public class Slot {
     private Integer slotPosition;
     private String slotErrorCode;
     private String slotInfo;
-    private String slotState;
+    private OperationState slotState;
 
     @JsonIgnore
     @ManyToOne
