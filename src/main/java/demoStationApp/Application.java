@@ -5,9 +5,12 @@ import demoStationApp.domain.Pedelec;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
 import demoStationApp.repository.StationRepository;
+import org.h2.server.web.WebServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,7 +21,6 @@ import java.util.UUID;
 @Configuration
 @EnableAutoConfiguration
 public class Application {
-
 
     public static void main(String[] args) {
 
