@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@ToString(includeFieldNames = true)
+@ToString(includeFieldNames = true, exclude = {"slot"})
 @EqualsAndHashCode(of = {"pedelecManufacturerId"})
 @Getter
 @Setter
@@ -34,6 +34,7 @@ public class Pedelec {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Battery battery;
+
     @JsonIgnore
     @OneToOne
     private Slot slot;

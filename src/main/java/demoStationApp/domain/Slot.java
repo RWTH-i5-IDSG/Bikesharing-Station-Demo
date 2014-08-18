@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@ToString(includeFieldNames = true)
+@ToString(includeFieldNames = true, exclude = {"station"})
 @EqualsAndHashCode(of = {"slotManufacturerId"})
 @Getter
 @Setter
