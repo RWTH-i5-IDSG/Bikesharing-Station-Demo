@@ -11,6 +11,6 @@ public class StationConfigurationDTO {
     private String cmsURI;
     private Integer heartbeatInterval;
     private Integer openSlotTimeout;
-    private Integer rebootRetrics;
+    private Integer rebootRetries;
     private Integer chargingStatusInformInterval;
 }
