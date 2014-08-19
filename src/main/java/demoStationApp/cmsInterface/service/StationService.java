@@ -39,7 +39,7 @@ public class StationService {
 
         station.setCmsURI(stationConfigurationDTO.getCmsURI());
         station.setOpenSlotTimeout(stationConfigurationDTO.getOpenSlotTimeout());
-        station.setRebootRetries(stationConfigurationDTO.getRebootRetrics());
+        station.setRebootRetries(stationConfigurationDTO.getRebootRetries());
         station.setChargingStatusInformInterval(stationConfigurationDTO.getChargingStatusInformInterval());
         station.setHeartbeatInterval(stationConfigurationDTO.getHeartbeatInterval());
 
@@ -58,7 +58,7 @@ public class StationService {
         stationConfigurationDTO.setChargingStatusInformInterval(station.getChargingStatusInformInterval());
         stationConfigurationDTO.setOpenSlotTimeout(station.getOpenSlotTimeout());
         stationConfigurationDTO.setCmsURI(station.getCmsURI());
-        stationConfigurationDTO.setRebootRetrics(station.getRebootRetries());
+        stationConfigurationDTO.setRebootRetries(station.getRebootRetries());
 
         return stationConfigurationDTO;
     }
