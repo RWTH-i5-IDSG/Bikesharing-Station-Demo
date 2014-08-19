@@ -8,7 +8,7 @@
  * Controller of the demoStationApp
  */
 angular.module('demoStationApp')
-  .controller('MainCtrl', function ($scope, $http, localStorageService, $alert) {
+  .controller('MainCtrl', function ($scope, $http, localStorageService, $alert, $interval) {
 
 //        window.onbeforeunload = function (event) {
 //            localStorageService.set('DemoStations', $scope.demoStations);
@@ -18,9 +18,18 @@ angular.module('demoStationApp')
 
 //        $scope.pedelecs = localStorageService.get('RentedPedelecs');
 
+
         $http.get("/stations").success(function(stations) {
+            console.log("Polling stations at " + new Date().toLocaleTimeString());
             $scope.demoStations = stations;
         });
+
+//        $interval(function() {
+//            $http.get("/stations").success(function(stations) {
+//                console.log("Polling stations at " + new Date().toLocaleTimeString());
+//                $scope.demoStations = stations;
+//            });
+//        }, 3000);
 
 
         if (!$scope.pedelecs) {
