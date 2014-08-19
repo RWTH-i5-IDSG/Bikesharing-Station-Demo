@@ -1,5 +1,6 @@
 package demoStationApp.cmsInterface.dto.request;
 
+import demoStationApp.domain.OperationState;
 import lombok.Data;
 
 /**
@@ -11,5 +12,5 @@ public class ChangePedelecOperationStateDTO {
 
 //    private Integer slotPosition;
 //    private String pedelecManufacturerId;
-    private String pedelecState;
+    private OperationState pedelecState;
 }

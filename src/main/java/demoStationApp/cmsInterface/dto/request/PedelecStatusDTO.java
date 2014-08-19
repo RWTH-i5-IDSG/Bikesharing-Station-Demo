@@ -1,5 +1,6 @@
 package demoStationApp.cmsInterface.dto.request;
 
+import demoStationApp.domain.OperationState;
 import lombok.Data;
 
 /**
@@ -11,6 +12,6 @@ public class PedelecStatusDTO {
     private String pedelecmanufacturerId;
     private String pedelecErrorCode;
     private String pedelecInfo;
-    private String pedelecState;
+    private OperationState pedelecState;
     private Long timestamp;
 }

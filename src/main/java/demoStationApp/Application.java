@@ -1,9 +1,6 @@
 package demoStationApp;
 
-import demoStationApp.domain.Battery;
-import demoStationApp.domain.Pedelec;
-import demoStationApp.domain.Slot;
-import demoStationApp.domain.Station;
+import demoStationApp.domain.*;
 import demoStationApp.repository.StationRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -32,7 +29,7 @@ public class Application {
             station.setFirmwareVersion("0.1a");
             station.setStationErrorCode("");
             station.setStationInfo("");
-            station.setStationState("OPERATIVE");
+            station.setStationState(OperationState.OPERATIVE);
             station.setHeartbeatInterval(30);
 
             ArrayList<Slot> slots = new ArrayList<Slot>();
@@ -43,7 +40,7 @@ public class Application {
                 slot.setSlotPosition(j+1);
                 slot.setSlotErrorCode("");
                 slot.setSlotInfo("");
-                slot.setSlotState("OPERATIVE");
+                slot.setSlotState(OperationState.OPERATIVE);
 
                 if(Math.round(Math.random()+0.1) == 1) {
                     slot.setPedelec(generatePedelec(slot));
@@ -66,7 +63,7 @@ public class Application {
         pedelec.setPedelecManufacturerId(UUID.randomUUID().toString());
         pedelec.setPedelecErrorCode("");
         pedelec.setPedelecInfo("");
-        pedelec.setPedelecState("OPERATIVE");
+        pedelec.setPedelecState(OperationState.OPERATIVE);
         pedelec.setChargingState("CHARGING");
         pedelec.setMeterValue(Math.random());
 

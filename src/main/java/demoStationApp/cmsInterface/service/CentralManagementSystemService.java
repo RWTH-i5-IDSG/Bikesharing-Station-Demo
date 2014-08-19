@@ -42,9 +42,9 @@ public class CentralManagementSystemService {
         for (Slot slot : station.getSlots()) {
             SlotDTO bootNotificationSlotDTO;
             if (slot.getPedelec() != null) {
-                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(),slot.getSlotPosition(),slot.getPedelec().getPedelecManufacturerId(), "","","");
+                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(),slot.getSlotPosition(),slot.getPedelec().getPedelecManufacturerId(), "","",null);
             } else {
-                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(),slot.getSlotPosition(), null,"","","");
+                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(),slot.getSlotPosition(), null,"","",null);
             }
             slots.add(bootNotificationSlotDTO);
         }
