@@ -9,8 +9,8 @@ import java.util.Date;
  */
 
 @Data
-public class UploadLogsDTO {
+public class  UploadLogsDTO {
     private String logDictionaryUrl;
-    private Date oldestLogTimestamp;
-    private Date latestLogTimestamp;
+    private Long oldestLogTimestamp;
+    private Long latestLogTimestamp;
 }

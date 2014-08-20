@@ -34,7 +34,7 @@ public class PedelecService {
         Pedelec pedelec = pedelecRepository.findOne(pedelecManufacturerId);
 
         if (pedelec == null) {
-            throw new CMSInterfaceException("No pedelec found", "not defined");
+            throw new CMSInterfaceException("No pedelec found", "undefined");
         }
 
         PedelecConfigurationDTO pedelecConfigurationDTO = new PedelecConfigurationDTO();

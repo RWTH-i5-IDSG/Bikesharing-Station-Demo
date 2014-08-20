@@ -20,6 +20,10 @@ public class Application {
 
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
+        //generateDemoData(context);
+    }
+
+    private static void generateDemoData(ConfigurableApplicationContext context) {
         StationRepository stationRepository = context.getBean(StationRepository.class);
 
         for (int i = 0; i < 5; i++) {
