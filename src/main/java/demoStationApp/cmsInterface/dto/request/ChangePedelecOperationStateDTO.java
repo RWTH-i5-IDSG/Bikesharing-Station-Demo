@@ -10,5 +10,6 @@ import lombok.Data;
 @Data
 public class ChangePedelecOperationStateDTO {
 
+    private Integer slotPosition;
     private OperationState pedelecState;
 }
