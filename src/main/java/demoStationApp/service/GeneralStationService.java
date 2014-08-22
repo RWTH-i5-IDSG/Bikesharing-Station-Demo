@@ -6,9 +6,9 @@ import demoStationApp.domain.Pedelec;
 import demoStationApp.domain.Slot;
 import demoStationApp.repository.PedelecRepository;
 import demoStationApp.repository.SlotRepository;
-import demoStationApp.repository.StationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by swam on 22/08/14.
@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GeneralStationService {
-
-    @Autowired
-    private StationRepository stationRepository;
 
     @Autowired
     private SlotRepository slotRepository;
@@ -35,7 +32,7 @@ public class GeneralStationService {
         pedelecRepository.save(pedelec);
 
         String uri = "http://localhost:8080/psi/transaction/start";
-        //new RestTemplate().postForLocation(uri, startTransactionDTO);
+        new RestTemplate().postForLocation(uri, startTransactionDTO);
     }
 
     public void stopTransaction(StopTransactionDTO stopTransactionDTO) {
@@ -47,6 +44,6 @@ public class GeneralStationService {
         pedelecRepository.save(pedelec);
 
         String uri = "http://localhost:8080/psi/transaction/stop";
-        //new RestTemplate().postForLocation(uri, stopTransactionDTO);
+        new RestTemplate().postForLocation(uri, stopTransactionDTO);
     }
 }
