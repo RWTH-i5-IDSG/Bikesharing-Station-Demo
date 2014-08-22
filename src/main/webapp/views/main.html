@@ -21,7 +21,6 @@
     </div>
 </div>
 <br>
-<!--<h3 ng-show="demoStation">Station: {{demoStation.stationManufacturerId}}</h3>-->
 
 <div class="well" ng-switch="authenticated" ng-show="demoStation">
     <form ng-switch-when="false" name="$parent.authenticationForm" role="form" class="form-inline" novalidate>
@@ -31,7 +30,7 @@
         </div>
         <div class="form-group" ng-class="{ 'has-error': authenticationForm.pin.$invalid && authenticationForm.pin.$dirty }">
             <label class="sr-only" for="pin" class="control-label">PIN</label>
-            <input name="pin" type="text" class="form-control" id="pin" ng-model="$parent.user.pin" placeholder="Enter PIN" required />
+            <input name="pin" type="number" class="form-control" id="pin" ng-model="$parent.user.pin" placeholder="Enter PIN" required />
         </div>
         <button class="btn btn-primary" ng-click="authenticate()">Authenticate</button>
         <h5><kbd>CardId: 4234324 | PIN: 1234</kbd></h5>
@@ -45,7 +44,7 @@
 
 <div class="well" ng-if="demoStation">
     <h5>Rent pedelec from Slot</h5>
-    <button style="margin: 4px; width: 50px; " ng-repeat="slot in demoStation.slots" ng-disabled="!slot.pedelec.pedelecManufacturerId || user.pedelec.pedelecManufacturerId || !authenticated" ng-class="{'btn-success':slot.pedelec.pedelecManufacturerId}" class="btn" ng-click="rent(slot)">{{slot.slotPosition}}</button>
+    <button style="margin: 4px; width: 50px; " ng-repeat="slot in demoStation.slots | orderBy : 'slotPosition'" ng-disabled="!slot.pedelec.pedelecManufacturerId || user.pedelec.pedelecManufacturerId || !authenticated || slot.slotState == 'INOPERATIVE' || slot.pedelec.pedelecState == 'INOPERATIVE'" ng-class="{'btn-success':slot.pedelec.pedelecManufacturerId, redborder: slot.slotState == 'INOPERATIVE' || slot.pedelec.pedelecState == 'INOPERATIVE'}" class="btn" ng-click="rent(slot)">{{slot.slotPosition}}</button>
     <br>
     <br>
     <div class="text-right">
@@ -55,9 +54,9 @@
 </div>
 <hr ng-show="pedelecs.length > 0">
 <h3 ng-show="pedelecs.length > 0">Rented Pedelecs</h3>
-<div ng-repeat="pedelec in pedelecs" class="well">
+<div ng-repeat="pedelec in rentedPedelecs" class="well">
     <h5>Rented Pedelec: {{pedelec.pedelecManufacturerId}}</h5>
-    <h5>Owner: {{pedelec.owner.userId}}</h5>
+    <!--<h5>Owner: {{pedelec.owner.userId}}</h5>-->
     <h5 ng-show="demoStation">Return Pedelec to Slot of Station "{{demoStation.stationManufacturerId}}"</h5>
-        <button style="margin: 4px; width: 50px;" ng-repeat="slot in demoStation.slots" ng-if="!slot.pedelec.pedelecManufacturerId" class="btn btn-warning" ng-click="return(pedelec, slot)">{{slot.slotPosition}}</button>
+        <button style="margin: 4px; width: 50px;" ng-repeat="slot in demoStation.slots | orderBy:'slotPosition'" ng-if="!slot.pedelec.pedelecManufacturerId" class="btn btn-warning" ng-click="return(pedelec, slot)">{{slot.slotPosition}}</button>
 </div>
