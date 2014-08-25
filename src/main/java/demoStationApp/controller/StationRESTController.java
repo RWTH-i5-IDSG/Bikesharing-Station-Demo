@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class StationRESTController {
     }
 
     @RequestMapping(value = "/stations/{manufacturerId}/authorize", method = RequestMethod.POST)
-    public AuthorizeConfirmationDTO authenticate(@RequestBody CustomerAuthorizeDTO customerAuthorizeDTO) throws HttpClientErrorException {
+    public AuthorizeConfirmationDTO authenticate(@RequestBody CustomerAuthorizeDTO customerAuthorizeDTO) throws RestClientException {
         log.info("Authorize :{}", customerAuthorizeDTO);
 
         String uri = "http://localhost:8080/psi/authorize";
