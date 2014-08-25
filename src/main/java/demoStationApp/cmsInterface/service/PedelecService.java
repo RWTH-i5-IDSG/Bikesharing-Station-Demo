@@ -84,22 +84,6 @@ public class PedelecService {
         pedelecStatusDTO.setPedelecErrorCode(pedelec.getPedelecErrorCode());
         pedelecStatusDTO.setTimestamp(new Date().getTime());
 
-//        ArrayList<PedelecStatusDTO> pedelecStatusDTOs = new ArrayList<>();
-//
-//        for (Slot slot : station.getSlots()) {
-//            if (slot.getPedelec() == null) {
-//                continue;
-//            }
-//            PedelecStatusDTO pedelecStatusDTO = new PedelecStatusDTO();
-//            pedelecStatusDTO.setPedelecmanufacturerId(slot.getPedelec().getPedelecManufacturerId());
-//            pedelecStatusDTO.setPedelecState(slot.getPedelec().getPedelecState());
-//            pedelecStatusDTO.setPedelecInfo(slot.getPedelec().getPedelecInfo());
-//            pedelecStatusDTO.setPedelecInfo(slot.getPedelec().getPedelecErrorCode());
-//            pedelecStatusDTO.setTimestamp(new Date().getTime());
-//
-//            pedelecStatusDTOs.add(pedelecStatusDTO);
-//        }
-
         try
         {
             RestTemplate rt = new RestTemplate();

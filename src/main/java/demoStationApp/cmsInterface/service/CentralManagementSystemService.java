@@ -4,12 +4,14 @@ import demoStationApp.cmsInterface.dto.request.SlotDTO;
 import demoStationApp.cmsInterface.dto.response.BootConfirmationDTO;
 import demoStationApp.cmsInterface.dto.request.BootNotificationDTO;
 import demoStationApp.cmsInterface.dto.request.ChargingStatusDTO;
+import demoStationApp.cmsInterface.dto.response.HeartbeatDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
 import demoStationApp.repository.StationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Created by swam on 11/08/14.
@@ -61,6 +64,23 @@ public class CentralManagementSystemService {
 
             bootConfirmationDTO = rt.postForObject(uri, bootNotificationDTO, BootConfirmationDTO.class);
             log.debug(bootConfirmationDTO.toString());
+
+            // go for heartbeats
+            ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+            threadPoolTaskScheduler.initialize();
+            ThreadPoolTaskScheduler scheduler = threadPoolTaskScheduler;
+
+            final ScheduledFuture scheduledFuture = scheduler.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    // send heartbeat for current station
+                    RestTemplate restTemplate = new RestTemplate();
+                    String restURI = "http://localhost:8080/psi/heartbeat";
+                    HeartbeatDTO heartbeatDTO = restTemplate.getForObject(restURI, HeartbeatDTO.class);
+
+                    log.debug(heartbeatDTO.toString());
+                }
+            }, bootConfirmationDTO.getHeartbeatInterval() * 1000); // delay in ms
 
         } catch (HttpClientErrorException e) {
             log.error(e.getMessage());
