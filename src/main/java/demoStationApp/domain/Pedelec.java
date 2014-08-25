@@ -26,7 +26,8 @@ public class Pedelec {
 
     @Enumerated(EnumType.STRING)
     private OperationState pedelecState;
-    private String chargingState;
+    @Enumerated(EnumType.STRING)
+    private ChargingState chargingState;
     private Double meterValue;
 
     private Double maxCurrentValue;

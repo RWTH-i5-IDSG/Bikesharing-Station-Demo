@@ -69,28 +69,36 @@ public class PedelecService {
     }
 
 
-    public void sendPedelecStatusNotification(String stationManufacturerId) throws CMSInterfaceException {
+    public void sendPedelecStatusNotification(String stationManufacturerId, String pedelecManufacturerId) throws CMSInterfaceException {
         Station station = stationRepository.findOne(stationManufacturerId);
 
         if (station == null) {
             throw new CMSInterfaceException("Station not found", "not defined");
         }
 
-        ArrayList<PedelecStatusDTO> pedelecStatusDTOs = new ArrayList<>();
+        Pedelec pedelec = pedelecRepository.findOne(pedelecManufacturerId);
+        PedelecStatusDTO pedelecStatusDTO = new PedelecStatusDTO();
+        pedelecStatusDTO.setPedelecmanufacturerId(pedelec.getPedelecManufacturerId());
+        pedelecStatusDTO.setPedelecState(pedelec.getPedelecState());
+        pedelecStatusDTO.setPedelecInfo(pedelec.getPedelecInfo());
+        pedelecStatusDTO.setPedelecErrorCode(pedelec.getPedelecErrorCode());
+        pedelecStatusDTO.setTimestamp(new Date().getTime());
 
-        for (Slot slot : station.getSlots()) {
-            if (slot.getPedelec() == null) {
-                continue;
-            }
-            PedelecStatusDTO pedelecStatusDTO = new PedelecStatusDTO();
-            pedelecStatusDTO.setPedelecmanufacturerId(slot.getPedelec().getPedelecManufacturerId());
-            pedelecStatusDTO.setPedelecState(slot.getPedelec().getPedelecState());
-            pedelecStatusDTO.setPedelecInfo(slot.getPedelec().getPedelecInfo());
-            pedelecStatusDTO.setPedelecInfo(slot.getPedelec().getPedelecErrorCode());
-            pedelecStatusDTO.setTimestamp(new Date().getTime());
-
-            pedelecStatusDTOs.add(pedelecStatusDTO);
-        }
+//        ArrayList<PedelecStatusDTO> pedelecStatusDTOs = new ArrayList<>();
+//
+//        for (Slot slot : station.getSlots()) {
+//            if (slot.getPedelec() == null) {
+//                continue;
+//            }
+//            PedelecStatusDTO pedelecStatusDTO = new PedelecStatusDTO();
+//            pedelecStatusDTO.setPedelecmanufacturerId(slot.getPedelec().getPedelecManufacturerId());
+//            pedelecStatusDTO.setPedelecState(slot.getPedelec().getPedelecState());
+//            pedelecStatusDTO.setPedelecInfo(slot.getPedelec().getPedelecInfo());
+//            pedelecStatusDTO.setPedelecInfo(slot.getPedelec().getPedelecErrorCode());
+//            pedelecStatusDTO.setTimestamp(new Date().getTime());
+//
+//            pedelecStatusDTOs.add(pedelecStatusDTO);
+//        }
 
         try
         {
@@ -98,7 +106,7 @@ public class PedelecService {
 
             String uri = "http://localhost:8080/psi/status/pedelec";
 
-            rt.postForObject(uri, pedelecStatusDTOs, String.class);
+            rt.postForObject(uri, pedelecStatusDTO, String.class);
 
         } catch (HttpClientErrorException e) {
             log.error(e.getMessage());

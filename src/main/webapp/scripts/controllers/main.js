@@ -18,6 +18,8 @@ angular.module('demoStationApp')
 
 //        $scope.pedelecs = localStorageService.get('RentedPedelecs');
 
+        var URI = "http://localhost:8081/";
+
         $http.get("/stations").success(function (stations) {
             console.log("Polling stations at " + new Date().toLocaleTimeString());
             $scope.demoStations = stations;
@@ -157,73 +159,90 @@ angular.module('demoStationApp')
 
 
         $scope.sendBootNotification = function () {
-            var bootNotification = {};
-            bootNotification.stationManufacturerId = $scope.demoStation.stationManufacturerId;
-            bootNotification.firmwareVersion = $scope.demoStation.firmwareVersion;
-            bootNotification.slots = [];
+//            var bootNotification = {};
+//            bootNotification.stationManufacturerId = $scope.demoStation.stationManufacturerId;
+//            bootNotification.firmwareVersion = $scope.demoStation.firmwareVersion;
+//            bootNotification.slots = [];
+//
+//            angular.forEach($scope.demoStation.slots, function (slot) {
+//                var tmpSlot = {};
+//                tmpSlot.slotManufacturerId = slot.slotManufacturerId;
+//                tmpSlot.slotPosition = slot.slotPosition;
+//
+//                if (slot.pedelec) {
+//                    tmpSlot.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
+//                }
+//                bootNotification.slots.push(tmpSlot);
+//            });
 
-            angular.forEach($scope.demoStation.slots, function (slot) {
-                var tmpSlot = {};
-                tmpSlot.slotManufacturerId = slot.slotManufacturerId;
-                tmpSlot.slotPosition = slot.slotPosition;
+            var stationManufacturerId = $scope.demoStation.stationManufacturerId;
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/boot";
 
-                if (slot.pedelec) {
-                    tmpSlot.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
-                }
-                bootNotification.slots.push(tmpSlot);
-            });
+            $http.post(targetURI)
+                .success(function () {
+                    console.log('Boot notification sent for station ' + $scope.demoStation.stationManufacturerId);
+                })
+                .error(function (data, status, headers, config) {
+                    alert('http error ' + status);
+                });
 
-            console.log(bootNotification);
-            showAlert('Send "Boot Notification"', '');
+                showAlert('Send "Boot Notification"', '');
         };
 
         $scope.sendStationStatusNotification = function () {
-            var stationStatusNotification = {};
-            stationStatusNotification.stationManufacturerId = $scope.demoStation.stationManufacturerId;
-            stationStatusNotification.stationErrorCode = $scope.demoStation.stationErrorCode;
-            stationStatusNotification.stationInfo = $scope.demoStation.stationInfo;
-            stationStatusNotification.stationState = $scope.demoStation.stationState;
-            stationStatusNotification.timestamp = new Date().getTime();
-            stationStatusNotification.slots = [];
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/sendStationStatusNotification";
+            $http.post(targetURI)
+                .success(function () {
+                    console.log('Status notification sent for station ' + $scope.demoStation.stationManufacturerId);
+                })
+                .error(function (data, status, headers, config) {
+                    alert('http error ' + status);
+                });
 
-            angular.forEach($scope.demoStation.slots, function (slot) {
-                var tmpSlot = {};
-                tmpSlot.slotManufacturerId = slot.slotManufacturerId;
-                tmpSlot.slotErrorCode = slot.slotErrorCode;
-                tmpSlot.slotInfo = slot.slotInfo;
-                tmpSlot.slotState = slot.slotState;
-
-                stationStatusNotification.slots.push(tmpSlot);
-            });
-
-            console.log(stationStatusNotification);
             showAlert('Send "Station Status Notification"');
         };
 
         $scope.sendPedelecStatusNotification = function (slot) {
-            var pedelecStatusNotification = {};
+//            var pedelecStatusNotification = {};
+//
+//            pedelecStatusNotification.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
+//            pedelecStatusNotification.pedelecErrorCode = slot.pedelec.pedelecErrorCode;
+//            pedelecStatusNotification.pedelecInfo = slot.pedelec.pedelecInfo;
+//            pedelecStatusNotification.pedelecState = slot.pedelec.pedelecState;
+//            pedelecStatusNotification.timestamp = new Date().getTime();
+            var pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
 
-            pedelecStatusNotification.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
-            pedelecStatusNotification.pedelecErrorCode = slot.pedelec.pedelecErrorCode;
-            pedelecStatusNotification.pedelecInfo = slot.pedelec.pedelecInfo;
-            pedelecStatusNotification.pedelecState = slot.pedelec.pedelecState;
-            pedelecStatusNotification.timestamp = new Date().getTime();
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/pedelecs/" + pedelecManufacturerId + "/sendPedelecStatusNotification";
+            $http.post(targetURI)
+                .success(function () {
+                    console.log('Pedelec status notification sent for station ' + $scope.demoStation.stationManufacturerId);
+                })
+                .error(function (data, status, headers, config) {
+                    alert('http error ' + status);
+                });
 
-            console.log(pedelecStatusNotification);
             showAlert('Send "Pedelec Status Notification" for Pedelec "' + slot.pedelec.pedelecManufacturerId + '"');
         };
 
         $scope.sendChargingStatusNotification = function (slot) {
-            var chargingStatusNotification = {};
+//            var chargingStatusNotification = {};
+//
+//            chargingStatusNotification.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
+//            chargingStatusNotification.slotManufacturerId = slot.slotManufacturerId;
+//            chargingStatusNotification.timestamp = new Date().getTime();
+//            chargingStatusNotification.chargingState = slot.pedelec.chargingState;
+//            chargingStatusNotification.meterValue = slot.pedelec.meterValue;
+//            chargingStatusNotification.battery = slot.pedelec.battery;
 
-            chargingStatusNotification.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
-            chargingStatusNotification.slotManufacturerId = slot.slotManufacturerId;
-            chargingStatusNotification.timestamp = new Date().getTime();
-            chargingStatusNotification.chargingState = slot.pedelec.chargingState;
-            chargingStatusNotification.meterValue = slot.pedelec.meterValue;
-            chargingStatusNotification.battery = slot.pedelec.battery;
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/pedelecs/sendChargingStatusNotification";
+            $http.post(targetURI)
+                .success(function () {
+                    console.log('Pedelec charging status notification sent for station ' + $scope.demoStation.stationManufacturerId);
+                })
+                .error(function (data, status, headers, config) {
+                    alert('http error ' + status);
+                });
 
-            console.log(chargingStatusNotification);
             showAlert('Send "Charging Status Notification" for Pedelec "' + slot.pedelec.pedelecManufacturerId + '"');
         };
 

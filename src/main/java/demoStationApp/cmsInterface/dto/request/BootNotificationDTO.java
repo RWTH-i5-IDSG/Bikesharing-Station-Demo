@@ -17,7 +17,7 @@ import java.util.List;
 public class BootNotificationDTO implements Serializable {
     private final String stationManufacturerId;
     private final String firmwareVersion;
-    private final List<SlotDTO> slots;
+    private final List<SlotDTO> slotDTOs;
 }
 
 

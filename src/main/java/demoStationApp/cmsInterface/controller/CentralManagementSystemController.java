@@ -49,4 +49,11 @@ public class CentralManagementSystemController {
 
     }
 
+    @RequestMapping(value = "/boot", method = RequestMethod.POST)
+    public void boot(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
+        log.debug("BOOT NOTIFICATION SENT");
+
+        centralManagementSystemService.sendBootNotification(stationManufacturerId);
+    }
+
 }

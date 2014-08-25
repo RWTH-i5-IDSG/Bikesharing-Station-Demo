@@ -68,7 +68,7 @@ public class Application {
         pedelec.setPedelecErrorCode("");
         pedelec.setPedelecInfo("");
         pedelec.setPedelecState(OperationState.OPERATIVE);
-        pedelec.setChargingState("CHARGING");
+        pedelec.setChargingState(ChargingState.CHARGING);
         pedelec.setMeterValue(Math.random());
 
         Battery battery = new Battery();
