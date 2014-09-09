@@ -1,7 +1,10 @@
 package demoStationApp.cmsInterface.service;
 
-import demoStationApp.cmsInterface.dto.request.*;
-import demoStationApp.cmsInterface.dto.response.BootConfirmationDTO;
+import demoStationApp.ApplicationConfig;
+import demoStationApp.cmsInterface.dto.request.ChangeStationOperationStateDTO;
+import demoStationApp.cmsInterface.dto.request.SlotDTO;
+import demoStationApp.cmsInterface.dto.request.StationConfigurationDTO;
+import demoStationApp.cmsInterface.dto.request.StationStatusDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
@@ -10,7 +13,7 @@ import demoStationApp.repository.StationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -24,18 +27,15 @@ import java.util.Date;
 @Service
 public class StationService {
 
-    @Autowired
-    private StationRepository stationRepository;
+    @Autowired private StationRepository stationRepository;
+    @Autowired private SlotRepository slotRepository;
+    @Autowired private RestTemplate restTemplate;
 
-    @Autowired
-    private SlotRepository slotRepository;
+    private static final String STATION_STATUS_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/status/station";
 
-    public void configurateStation(String stationManufacturerId, StationConfigurationDTO stationConfigurationDTO) throws CMSInterfaceException {
-        Station station = stationRepository.findOne(stationManufacturerId);
-
-        if (station == null) {
-            throw new CMSInterfaceException("No station found","not defined");
-        }
+    public void configurateStation(String stationManufacturerId,
+                                   StationConfigurationDTO stationConfigurationDTO) throws CMSInterfaceException {
+        Station station = this.getStation(stationManufacturerId);
 
         station.setCmsURI(stationConfigurationDTO.getCmsURI());
         station.setOpenSlotTimeout(stationConfigurationDTO.getOpenSlotTimeout());
@@ -47,11 +47,7 @@ public class StationService {
     }
 
     public StationConfigurationDTO provideStationConfiguration(String stationManufacturerId) throws CMSInterfaceException {
-        Station station = stationRepository.findOne(stationManufacturerId);
-
-        if (station == null) {
-            throw new CMSInterfaceException("No station found","not defined");
-        }
+        Station station = this.getStation(stationManufacturerId);
 
         StationConfigurationDTO stationConfigurationDTO = new StationConfigurationDTO();
         stationConfigurationDTO.setHeartbeatInterval(station.getHeartbeatInterval());
@@ -63,13 +59,9 @@ public class StationService {
         return stationConfigurationDTO;
     }
 
-    public void setStationOperationState(String stationManufacturerId, ChangeStationOperationStateDTO changeStationOperationStateDTO) throws CMSInterfaceException {
-
-        Station station = stationRepository.findOne(stationManufacturerId);
-
-        if (station == null) {
-            throw new CMSInterfaceException("No station found","not defined");
-        }
+    public void setStationOperationState(String stationManufacturerId,
+                                         ChangeStationOperationStateDTO changeStationOperationStateDTO) throws CMSInterfaceException {
+        Station station = this.getStation(stationManufacturerId);
 
         if (changeStationOperationStateDTO.getSlotPosition() != null) {
             Slot slot = slotRepository.findBySlotPositionAndStation(changeStationOperationStateDTO.getSlotPosition(), station);
@@ -84,14 +76,9 @@ public class StationService {
 
 
     public void sendStationStatusNotification(String stationManufacturerId) throws CMSInterfaceException {
-        Station station = stationRepository.findOne(stationManufacturerId);
+        Station station = this.getStation(stationManufacturerId);
 
-        if (station == null) {
-            throw new CMSInterfaceException("Station not found", "not defined");
-        }
-
-        ArrayList<SlotDTO> slots = new ArrayList<SlotDTO>();
-
+        ArrayList<SlotDTO> slots = new ArrayList<>();
         for (Slot slot : station.getSlots()) {
             SlotDTO stationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(), null, null, slot.getSlotErrorCode(), slot.getSlotInfo(), slot.getSlotState());
 
@@ -100,16 +87,27 @@ public class StationService {
 
         StationStatusDTO stationStatusDTO = new StationStatusDTO(station.getStationManufacturerId(), station.getStationErrorCode(), station.getStationInfo(), new Date().getTime(), slots);
 
-        try
-        {
-            RestTemplate rt = new RestTemplate();
+        this.sendStationStatus(stationStatusDTO);
+    }
 
-            String uri = "http://localhost:8080/psi/status/station";
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
 
-            rt.postForObject(uri, stationStatusDTO, String.class);
+    private Station getStation(String stationManufacturerId) throws CMSInterfaceException {
+        Station station = stationRepository.findOne(stationManufacturerId);
+        if (station == null) {
+            throw new CMSInterfaceException("Station not found", "not defined");
+        }
+        return station;
+    }
 
-        } catch (HttpClientErrorException e) {
-            log.error(e.getMessage());
+    private void sendStationStatus(StationStatusDTO dto) {
+        try {
+            String response = restTemplate.postForObject(STATION_STATUS_PATH, dto, String.class);
+            log.debug(response);
+        } catch (RestClientException e) {
+            log.error("Exception occurred", e);
         }
     }
 }

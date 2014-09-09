@@ -1,12 +1,20 @@
 package demoStationApp;
 
-import demoStationApp.domain.*;
+import demoStationApp.domain.Battery;
+import demoStationApp.domain.ChargingState;
+import demoStationApp.domain.OperationState;
+import demoStationApp.domain.Pedelec;
+import demoStationApp.domain.Slot;
+import demoStationApp.domain.Station;
 import demoStationApp.repository.StationRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -17,10 +25,20 @@ import java.util.UUID;
 public class Application {
 
     public static void main(String[] args) {
-
         ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
-
         //generateDemoData(context);
+    }
+
+    @Bean
+    private ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+        scheduler.setPoolSize(5);
+        return scheduler;
+    }
+
+    @Bean
+    private RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     private static void generateDemoData(ConfigurableApplicationContext context) {

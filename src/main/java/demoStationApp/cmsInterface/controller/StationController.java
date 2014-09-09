@@ -5,21 +5,26 @@ import demoStationApp.cmsInterface.dto.request.StationConfigurationDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.cmsInterface.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by swam on 08/08/14.
  */
 
 @RestController
-@RequestMapping(value = "/{stationManufacturerId}/cmsi", produces = "application/json")
+@RequestMapping(value = "/{stationManufacturerId}/cmsi", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StationController {
 
-    @Autowired
-    private StationService stationService;
+    @Autowired private StationService stationService;
 
     @RequestMapping(value = "/config", method = RequestMethod.POST)
-    public void changeStationConfiguration(@PathVariable String stationManufacturerId, @RequestBody StationConfigurationDTO stationConfigurationDTO) throws CMSInterfaceException {
+    public void changeStationConfiguration(@PathVariable String stationManufacturerId,
+                                           @RequestBody StationConfigurationDTO stationConfigurationDTO) throws CMSInterfaceException {
         stationService.configurateStation(stationManufacturerId, stationConfigurationDTO);
     }
 
@@ -28,9 +33,10 @@ public class StationController {
         return stationService.provideStationConfiguration(stationManufacturerId);
     }
 
-
     @RequestMapping(value = "/state", method = RequestMethod.POST)
-    public void changeStationOperationState(@PathVariable String stationManufacturerId, @RequestBody ChangeStationOperationStateDTO changeStationOperationStateDTO) throws CMSInterfaceException {
+    public void changeStationOperationState(@PathVariable String stationManufacturerId,
+                                            @RequestBody ChangeStationOperationStateDTO changeStationOperationStateDTO)
+            throws CMSInterfaceException {
         stationService.setStationOperationState(stationManufacturerId, changeStationOperationStateDTO);
     }
 

@@ -1,12 +1,15 @@
 package demoStationApp.cmsInterface.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Created by swam on 04/08/14.
  */
 public class CMSInterfaceException extends Exception {
     private static final long serialVersionUID = 1L;
 
-    private String errorCode;
+    @Getter @Setter private String errorCode;
 
     public CMSInterfaceException(String message, String errorCode) {
         super(message);
@@ -18,11 +21,4 @@ public class CMSInterfaceException extends Exception {
         this.errorCode = errorCode;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
 }

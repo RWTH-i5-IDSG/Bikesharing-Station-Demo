@@ -1,5 +1,6 @@
 package demoStationApp.service;
 
+import demoStationApp.ApplicationConfig;
 import demoStationApp.cmsInterface.dto.request.StartTransactionDTO;
 import demoStationApp.cmsInterface.dto.request.StopTransactionDTO;
 import demoStationApp.domain.Pedelec;
@@ -15,13 +16,14 @@ import org.springframework.web.client.RestTemplate;
  */
 
 @Service
-public class GeneralStationService {
+public class TransactionService {
 
-    @Autowired
-    private SlotRepository slotRepository;
+    @Autowired private SlotRepository slotRepository;
+    @Autowired private PedelecRepository pedelecRepository;
+    @Autowired private RestTemplate restTemplate;
 
-    @Autowired
-    private PedelecRepository pedelecRepository;
+    private static final String START_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/transaction/start";
+    private static final String STOP_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/transaction/stop";
 
     public void startTransaction(StartTransactionDTO startTransactionDTO) {
         Pedelec pedelec = pedelecRepository.findOne(startTransactionDTO.getPedelecManufacturerId());
@@ -31,8 +33,7 @@ public class GeneralStationService {
         slotRepository.save(slot);
         pedelecRepository.save(pedelec);
 
-        String uri = "http://localhost:8080/psi/transaction/start";
-        new RestTemplate().postForLocation(uri, startTransactionDTO);
+        restTemplate.postForLocation(START_PATH, startTransactionDTO);
     }
 
     public void stopTransaction(StopTransactionDTO stopTransactionDTO) {
@@ -43,7 +44,6 @@ public class GeneralStationService {
         slotRepository.save(slot);
         pedelecRepository.save(pedelec);
 
-        String uri = "http://localhost:8080/psi/transaction/stop";
-        new RestTemplate().postForLocation(uri, stopTransactionDTO);
+        restTemplate.postForLocation(STOP_PATH, stopTransactionDTO);
     }
 }

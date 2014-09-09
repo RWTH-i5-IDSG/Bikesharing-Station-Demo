@@ -17,19 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorizeService {
 
-    @Autowired
-    private SlotRepository slotRepository;
-
-    @Autowired
-    private StationRepository stationRepository;
-
-    @Autowired
-    private PedelecRepository pedelecRepository;
+    @Autowired private SlotRepository slotRepository;
+    @Autowired private StationRepository stationRepository;
+    @Autowired private PedelecRepository pedelecRepository;
 
     public void removePedelec(String stationManufacturerId, AuthorizeDTO authorizeDTO) throws CMSInterfaceException {
-
         Station station = stationRepository.findOne(stationManufacturerId);
-
         Slot slot = slotRepository.findBySlotPositionAndStation(authorizeDTO.getSlotPosition(), station);
 
         if (slot == null || station == null) {

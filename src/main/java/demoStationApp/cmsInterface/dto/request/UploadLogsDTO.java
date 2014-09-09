@@ -2,8 +2,6 @@ package demoStationApp.cmsInterface.dto.request;
 
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * Created by swam on 08/08/14.
  */

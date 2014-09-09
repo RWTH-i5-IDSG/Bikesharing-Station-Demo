@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 
@@ -17,14 +16,11 @@ public class GeneralCMSInterfaceExceptionHandler {
 
     @ExceptionHandler(CMSInterfaceException.class)
     public ResponseEntity<ErrorMessage> cmsInterfaceException(CMSInterfaceException e) {
-
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorMessage msg = new ErrorMessage(
                 new Date().getTime(),
                 e.getErrorCode(),
                 e.getMessage()
         );
-
-        return new ResponseEntity<ErrorMessage>(msg, status);
+        return new ResponseEntity<>(msg, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

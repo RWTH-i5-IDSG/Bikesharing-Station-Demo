@@ -1,11 +1,13 @@
 package demoStationApp.cmsInterface.service;
 
-import demoStationApp.cmsInterface.dto.request.SlotDTO;
-import demoStationApp.cmsInterface.dto.response.BootConfirmationDTO;
+import demoStationApp.ApplicationConfig;
 import demoStationApp.cmsInterface.dto.request.BootNotificationDTO;
 import demoStationApp.cmsInterface.dto.request.ChargingStatusDTO;
+import demoStationApp.cmsInterface.dto.request.SlotDTO;
+import demoStationApp.cmsInterface.dto.response.BootConfirmationDTO;
 import demoStationApp.cmsInterface.dto.response.HeartbeatDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
+import demoStationApp.domain.Pedelec;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
 import demoStationApp.repository.StationRepository;
@@ -13,13 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 /**
  * Created by swam on 11/08/14.
@@ -29,92 +30,89 @@ import java.util.concurrent.ScheduledFuture;
 @Service
 public class CentralManagementSystemService {
 
-    @Autowired
-    private StationRepository stationRepository;
+    @Autowired private StationRepository stationRepository;
+    @Autowired private RestTemplate restTemplate;
+    @Autowired private ThreadPoolTaskScheduler scheduler;
+
+    private static final String BOOT_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/boot";
+    private static final String HEARTBEAT_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/heartbeat";
 
     public BootConfirmationDTO sendBootNotification(String stationManufacturerId) throws CMSInterfaceException {
+        Station station = this.getStation(stationManufacturerId);
 
-        Station station = stationRepository.findOne(stationManufacturerId);
-
-        if (station == null) {
-            throw new CMSInterfaceException("Station not found", "not defined");
-        }
-
-        ArrayList<SlotDTO> slots = new ArrayList<SlotDTO>();
-
+        ArrayList<SlotDTO> slots = new ArrayList<>();
         for (Slot slot : station.getSlots()) {
             SlotDTO bootNotificationSlotDTO;
-            if (slot.getPedelec() != null) {
-                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(),slot.getSlotPosition(),slot.getPedelec().getPedelecManufacturerId(), "","",null);
+
+            Pedelec pedelec = slot.getPedelec();
+            if (pedelec == null) {
+                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(), slot.getSlotPosition(), null, "", "", null);
             } else {
-                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(),slot.getSlotPosition(), null,"","",null);
+                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(), slot.getSlotPosition(), pedelec.getPedelecManufacturerId(), "", "", null);
             }
+
             slots.add(bootNotificationSlotDTO);
         }
 
         BootNotificationDTO bootNotificationDTO = new BootNotificationDTO(station.getStationManufacturerId(),station.getFirmwareVersion(), slots);
+        BootConfirmationDTO bootConfirmationDTO = this.sendBoot(bootNotificationDTO);
 
-        BootConfirmationDTO bootConfirmationDTO = null;
+        long interval = bootConfirmationDTO.getHeartbeatInterval() * 1000; // delay in ms
+        scheduler.scheduleAtFixedRate(new HeartbeatRunner(), interval);
 
-        try
-        {
-            RestTemplate rt = new RestTemplate();
-
-            String uri = "http://localhost:8080/psi/boot";
-
-            bootConfirmationDTO = rt.postForObject(uri, bootNotificationDTO, BootConfirmationDTO.class);
-            log.debug(bootConfirmationDTO.toString());
-
-            // go for heartbeats
-            ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-            threadPoolTaskScheduler.initialize();
-            ThreadPoolTaskScheduler scheduler = threadPoolTaskScheduler;
-
-            final ScheduledFuture scheduledFuture = scheduler.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    // send heartbeat for current station
-                    RestTemplate restTemplate = new RestTemplate();
-                    String restURI = "http://localhost:8080/psi/heartbeat";
-                    HeartbeatDTO heartbeatDTO = restTemplate.getForObject(restURI, HeartbeatDTO.class);
-
-                    log.debug(heartbeatDTO.toString());
-                }
-            }, bootConfirmationDTO.getHeartbeatInterval() * 1000); // delay in ms
-
-        } catch (HttpClientErrorException e) {
-            log.error(e.getMessage());
-        }
         return bootConfirmationDTO;
     }
 
-
-
     public List<ChargingStatusDTO> provideChargingStatus(String stationManufacturerId) throws CMSInterfaceException {
+        Station station = this.getStation(stationManufacturerId);
 
+        ArrayList<ChargingStatusDTO> chargingStatusDTOArrayList = new ArrayList<>();
+        for (Slot slot : station.getSlots()) {
+            if (slot.getPedelec() != null) {
+                ChargingStatusDTO dto = new ChargingStatusDTO();
+                dto.setBattery(slot.getPedelec().getBattery());
+                dto.setCharginState(slot.getPedelec().getChargingState());
+                dto.setMeterValue(slot.getPedelec().getMeterValue());
+                dto.setPedelecManufacturerId(slot.getPedelec().getPedelecManufacturerId());
+                dto.setSlotManufacturerId(slot.getSlotManufacturerId());
+                dto.setTimestamp(new Date().getTime());
+
+                chargingStatusDTOArrayList.add(dto);
+            }
+        }
+        return chargingStatusDTOArrayList;
+    }
+
+    // -------------------------------------------------------------------------
+    // Helpers
+    // -------------------------------------------------------------------------
+
+    private Station getStation(String stationManufacturerId) throws CMSInterfaceException {
         Station station = stationRepository.findOne(stationManufacturerId);
-
         if (station == null) {
             throw new CMSInterfaceException("Station not found", "not defined");
         }
+        return station;
+    }
 
-        ArrayList<ChargingStatusDTO> chargingStatusDTOArrayList = new ArrayList<ChargingStatusDTO>();
+    private BootConfirmationDTO sendBoot(BootNotificationDTO bootNotificationDTO) throws CMSInterfaceException {
+        try {
+            BootConfirmationDTO bootConfirmationDTO = restTemplate.postForObject(BOOT_PATH, bootNotificationDTO, BootConfirmationDTO.class);
+            log.debug(bootConfirmationDTO.toString());
+            return bootConfirmationDTO;
 
-        for (Slot slot : station.getSlots()) {
-            if (slot.getPedelec() != null) {
-                ChargingStatusDTO chargingStatusDTO = new ChargingStatusDTO();
-                chargingStatusDTO.setBattery(slot.getPedelec().getBattery());
-                chargingStatusDTO.setCharginState(slot.getPedelec().getChargingState());
-                chargingStatusDTO.setMeterValue(slot.getPedelec().getMeterValue());
-                chargingStatusDTO.setPedelecManufacturerId(slot.getPedelec().getPedelecManufacturerId());
-                chargingStatusDTO.setSlotManufacturerId(slot.getSlotManufacturerId());
-                chargingStatusDTO.setTimestamp(new Date().getTime());
-
-                chargingStatusDTOArrayList.add(chargingStatusDTO);
-            }
+        } catch (RestClientException e) {
+            log.error("Exception occurred", e);
+            throw new CMSInterfaceException(e.getMessage(), "not defined");
         }
+    }
 
-        return chargingStatusDTOArrayList;
+    private class HeartbeatRunner implements Runnable {
+        @Override
+        public void run() {
+            HeartbeatDTO heartbeatDTO = restTemplate.getForObject(HEARTBEAT_PATH, HeartbeatDTO.class);
+            log.debug(heartbeatDTO.toString());
+        }
     }
 
 }
