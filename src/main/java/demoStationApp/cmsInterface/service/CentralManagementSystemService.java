@@ -17,6 +17,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import sun.print.PeekGraphics;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,12 +69,14 @@ public class CentralManagementSystemService {
 
         ArrayList<ChargingStatusDTO> chargingStatusDTOArrayList = new ArrayList<>();
         for (Slot slot : station.getSlots()) {
-            if (slot.getPedelec() != null) {
+
+            Pedelec pedelec = slot.getPedelec();
+            if (pedelec != null) {
                 ChargingStatusDTO dto = new ChargingStatusDTO();
-                dto.setBattery(slot.getPedelec().getBattery());
-                dto.setCharginState(slot.getPedelec().getChargingState());
-                dto.setMeterValue(slot.getPedelec().getMeterValue());
-                dto.setPedelecManufacturerId(slot.getPedelec().getPedelecManufacturerId());
+                dto.setBattery(pedelec.getBattery());
+                dto.setCharginState(pedelec.getChargingState());
+                dto.setMeterValue(pedelec.getMeterValue());
+                dto.setPedelecManufacturerId(pedelec.getPedelecManufacturerId());
                 dto.setSlotManufacturerId(slot.getSlotManufacturerId());
                 dto.setTimestamp(new Date().getTime());
 

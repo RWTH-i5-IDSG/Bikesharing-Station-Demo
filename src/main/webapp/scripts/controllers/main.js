@@ -66,7 +66,7 @@ angular.module('demoStationApp')
 
             $http.post('/stations/' + $scope.demoStation.stationManufacturerId + '/authorize', $scope.user)
                 .success(function (data) {
-                    $scope.user.userId = data.customerId;
+                    $scope.user.userId = data.userId;
                     $scope.authenticated = true;
                     showAlert('User is authorized', '');
                 }).error(function (data, status, headers, config) {

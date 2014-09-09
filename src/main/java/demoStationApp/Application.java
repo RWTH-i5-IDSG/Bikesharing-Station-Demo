@@ -30,14 +30,14 @@ public class Application {
     }
 
     @Bean
-    private ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(5);
         return scheduler;
     }
 
     @Bean
-    private RestTemplate restTemplate() {
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
