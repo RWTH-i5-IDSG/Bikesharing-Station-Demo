@@ -1,14 +1,15 @@
 package demoStationApp.cmsInterface.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.Builder;
 
 /**
  * Created by swam on 08/08/14.
  */
-
-@Data
-public class  UploadLogsDTO {
-    private String logDictionaryUrl;
-    private Long oldestLogTimestamp;
-    private Long latestLogTimestamp;
+@Getter
+@Builder
+public final class UploadLogsDTO {
+    private final String logDictionaryUrl;
+    private final Long oldestLogTimestamp;
+    private final Long latestLogTimestamp;
 }

@@ -49,14 +49,13 @@ public class StationService {
     public StationConfigurationDTO provideStationConfiguration(String stationManufacturerId) throws CMSInterfaceException {
         Station station = this.getStation(stationManufacturerId);
 
-        StationConfigurationDTO stationConfigurationDTO = new StationConfigurationDTO();
-        stationConfigurationDTO.setHeartbeatInterval(station.getHeartbeatInterval());
-        stationConfigurationDTO.setChargingStatusInformInterval(station.getChargingStatusInformInterval());
-        stationConfigurationDTO.setOpenSlotTimeout(station.getOpenSlotTimeout());
-        stationConfigurationDTO.setCmsURI(station.getCmsURI());
-        stationConfigurationDTO.setRebootRetries(station.getRebootRetries());
-
-        return stationConfigurationDTO;
+        return StationConfigurationDTO.builder()
+                .heartbeatInterval(station.getHeartbeatInterval())
+                .chargingStatusInformInterval(station.getChargingStatusInformInterval())
+                .openSlotTimeout(station.getOpenSlotTimeout())
+                .cmsURI(station.getCmsURI())
+                .rebootRetries(station.getRebootRetries())
+                .build();
     }
 
     public void setStationOperationState(String stationManufacturerId,
@@ -80,12 +79,23 @@ public class StationService {
 
         ArrayList<SlotDTO> slots = new ArrayList<>();
         for (Slot slot : station.getSlots()) {
-            SlotDTO stationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(), null, null, slot.getSlotErrorCode(), slot.getSlotInfo(), slot.getSlotState());
+            SlotDTO stationSlotDTO = SlotDTO.builder()
+                    .slotManufacturerId(slot.getSlotManufacturerId())
+                    .slotErrorCode(slot.getSlotErrorCode())
+                    .slotInfo(slot.getSlotInfo())
+                    .slotState(slot.getSlotState())
+                    .build();
 
             slots.add(stationSlotDTO);
         }
 
-        StationStatusDTO stationStatusDTO = new StationStatusDTO(station.getStationManufacturerId(), station.getStationErrorCode(), station.getStationInfo(), new Date().getTime(), slots);
+        StationStatusDTO stationStatusDTO = StationStatusDTO.builder()
+                .stationManufacturerId(station.getStationManufacturerId())
+                .stationErrorCode(station.getStationErrorCode())
+                .stationInfo(station.getStationInfo())
+                .timestamp(new Date().getTime())
+                .slots(slots)
+                .build();
 
         this.sendStationStatus(stationStatusDTO);
     }

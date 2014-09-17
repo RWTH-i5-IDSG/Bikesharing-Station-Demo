@@ -1,16 +1,17 @@
 package demoStationApp.cmsInterface.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.Builder;
 
 /**
  * Created by swam on 31/07/14.
  */
-
-@Data
+@Getter
+@Builder
 public class StartTransactionDTO {
-    private Long userId;
-    private String pedelecManufacturerId;
-    private String stationManufacturerId;
-    private String slotManufacturerId;
-    private Long timestamp;
+    private final Long userId;
+    private final String pedelecManufacturerId;
+    private final String stationManufacturerId;
+    private final String slotManufacturerId;
+    private final Long timestamp;
 }

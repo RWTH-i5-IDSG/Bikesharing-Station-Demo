@@ -13,7 +13,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -25,7 +24,7 @@ import java.util.List;
 @EqualsAndHashCode(of = {"stationManufacturerId"})
 @Getter
 @Setter
-public class Station implements Serializable{
+public class Station {
 
     @Id
     private String stationManufacturerId;

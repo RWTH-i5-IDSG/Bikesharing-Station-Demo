@@ -17,7 +17,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import sun.print.PeekGraphics;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,19 +42,31 @@ public class CentralManagementSystemService {
 
         ArrayList<SlotDTO> slots = new ArrayList<>();
         for (Slot slot : station.getSlots()) {
-            SlotDTO bootNotificationSlotDTO;
+            SlotDTO slotDTO;
 
             Pedelec pedelec = slot.getPedelec();
             if (pedelec == null) {
-                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(), slot.getSlotPosition(), null, "", "", null);
+                slotDTO = SlotDTO.builder()
+                        .slotManufacturerId(slot.getSlotManufacturerId())
+                        .slotPosition(slot.getSlotPosition())
+                        .build();
             } else {
-                bootNotificationSlotDTO = new SlotDTO(slot.getSlotManufacturerId(), slot.getSlotPosition(), pedelec.getPedelecManufacturerId(), "", "", null);
+                slotDTO = SlotDTO.builder()
+                        .slotManufacturerId(slot.getSlotManufacturerId())
+                        .slotPosition(slot.getSlotPosition())
+                        .pedelecManufacturerId(pedelec.getPedelecManufacturerId())
+                        .build();
             }
 
-            slots.add(bootNotificationSlotDTO);
+            slots.add(slotDTO);
         }
 
-        BootNotificationDTO bootNotificationDTO = new BootNotificationDTO(station.getStationManufacturerId(),station.getFirmwareVersion(), slots);
+        BootNotificationDTO bootNotificationDTO = BootNotificationDTO.builder()
+                .stationManufacturerId(station.getStationManufacturerId())
+                .firmwareVersion(station.getFirmwareVersion())
+                .slotDTOs(slots)
+                .build();
+
         BootConfirmationDTO bootConfirmationDTO = this.sendBoot(bootNotificationDTO);
 
         long interval = bootConfirmationDTO.getHeartbeatInterval() * 1000; // delay in ms
@@ -67,23 +78,25 @@ public class CentralManagementSystemService {
     public List<ChargingStatusDTO> provideChargingStatus(String stationManufacturerId) throws CMSInterfaceException {
         Station station = this.getStation(stationManufacturerId);
 
-        ArrayList<ChargingStatusDTO> chargingStatusDTOArrayList = new ArrayList<>();
+        long timestamp = new Date().getTime();
+        List<ChargingStatusDTO> dtoList = new ArrayList<>();
         for (Slot slot : station.getSlots()) {
 
             Pedelec pedelec = slot.getPedelec();
             if (pedelec != null) {
-                ChargingStatusDTO dto = new ChargingStatusDTO();
-                dto.setBattery(pedelec.getBattery());
-                dto.setCharginState(pedelec.getChargingState());
-                dto.setMeterValue(pedelec.getMeterValue());
-                dto.setPedelecManufacturerId(pedelec.getPedelecManufacturerId());
-                dto.setSlotManufacturerId(slot.getSlotManufacturerId());
-                dto.setTimestamp(new Date().getTime());
+                ChargingStatusDTO dto = ChargingStatusDTO.builder()
+                        .battery(pedelec.getBattery())
+                        .charginState(pedelec.getChargingState())
+                        .meterValue(pedelec.getMeterValue())
+                        .pedelecManufacturerId(pedelec.getPedelecManufacturerId())
+                        .slotManufacturerId(slot.getSlotManufacturerId())
+                        .timestamp(timestamp)
+                        .build();
 
-                chargingStatusDTOArrayList.add(dto);
+                dtoList.add(dto);
             }
         }
-        return chargingStatusDTOArrayList;
+        return dtoList;
     }
 
     // -------------------------------------------------------------------------

@@ -1,13 +1,14 @@
 package demoStationApp.cmsInterface.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.Builder;
 
 /**
  * Created by swam on 31/07/14.
  */
-
-@Data
-public class CustomerAuthorizeDTO {
-    private String cardId;
-    private Integer pin;
+@Getter
+@Builder
+public final class CustomerAuthorizeDTO {
+    private final String cardId;
+    private final Integer pin;
 }

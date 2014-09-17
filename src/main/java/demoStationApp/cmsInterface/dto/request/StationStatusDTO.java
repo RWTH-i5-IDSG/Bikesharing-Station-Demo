@@ -1,22 +1,19 @@
 package demoStationApp.cmsInterface.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.experimental.Builder;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by swam on 31/07/14.
  */
-
-@Data
-@AllArgsConstructor
-public class StationStatusDTO implements Serializable {
-    private String stationManufacturerId;
-    private String stationErrorCode;
-    private String stationInfo;
-    private Long timestamp;
-    private List<SlotDTO> slots;
-
+@Getter
+@Builder
+public final class StationStatusDTO {
+    private final String stationManufacturerId;
+    private final String stationErrorCode;
+    private final String stationInfo;
+    private final Long timestamp;
+    private final List<SlotDTO> slots;
 }

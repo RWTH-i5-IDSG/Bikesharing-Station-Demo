@@ -1,14 +1,13 @@
 package demoStationApp.cmsInterface.exception;
 
-import lombok.Data;
+import lombok.Value;
 
 /**
  * Created by swam on 01/08/14.
  */
-
-@Data
+@Value
 public class ErrorMessage {
-    private final Long timestamp;
-    private final String code;
-    private final String message;
+    private Long timestamp;
+    private String code;
+    private String message;
 }
