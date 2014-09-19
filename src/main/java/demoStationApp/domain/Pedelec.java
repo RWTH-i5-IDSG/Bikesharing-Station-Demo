@@ -28,7 +28,7 @@ public class Pedelec {
     @Id
     private String pedelecManufacturerId;
     private String pedelecErrorCode;
-    private String pedelecInfo;
+    private String pedelecErrorInfo;
 
     @Enumerated(EnumType.STRING)
     private OperationState pedelecState;

@@ -14,6 +14,6 @@ public final class SlotDTO {
     private final Integer slotPosition;
     private final String pedelecManufacturerId;
     private final String slotErrorCode;
-    private final String slotInfo;
+    private final String slotErrorInfo;
     private final OperationState slotState;
 }

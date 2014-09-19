@@ -70,7 +70,7 @@ public class PedelecService {
         PedelecStatusDTO dto = PedelecStatusDTO.builder()
                 .pedelecmanufacturerId(pedelec.getPedelecManufacturerId())
                 .pedelecState(pedelec.getPedelecState())
-                .pedelecInfo(pedelec.getPedelecInfo())
+                .pedelecErrorInfo(pedelec.getPedelecErrorInfo())
                 .pedelecErrorCode(pedelec.getPedelecErrorCode())
                 .timestamp(new Date().getTime())
                 .build();

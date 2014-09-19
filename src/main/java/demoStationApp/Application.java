@@ -50,7 +50,7 @@ public class Application {
             station.setStationManufacturerId(UUID.randomUUID().toString());
             station.setFirmwareVersion("0.1a");
             station.setStationErrorCode("");
-            station.setStationInfo("");
+            station.setStationErrorInfo("");
             station.setStationState(OperationState.OPERATIVE);
             station.setHeartbeatInterval(30);
 
@@ -61,7 +61,7 @@ public class Application {
                 slot.setSlotManufacturerId(UUID.randomUUID().toString());
                 slot.setSlotPosition(j+1);
                 slot.setSlotErrorCode("");
-                slot.setSlotInfo("");
+                slot.setSlotErrorInfo("");
                 slot.setSlotState(OperationState.OPERATIVE);
 
                 if(Math.round(Math.random()+0.1) == 1) {
@@ -84,7 +84,7 @@ public class Application {
 
         pedelec.setPedelecManufacturerId(UUID.randomUUID().toString());
         pedelec.setPedelecErrorCode("");
-        pedelec.setPedelecInfo("");
+        pedelec.setPedelecErrorInfo("");
         pedelec.setPedelecState(OperationState.OPERATIVE);
         pedelec.setChargingState(ChargingState.CHARGING);
         pedelec.setMeterValue(Math.random());

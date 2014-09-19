@@ -30,7 +30,7 @@ public class Slot {
     private String slotManufacturerId;
     private Integer slotPosition;
     private String slotErrorCode;
-    private String slotInfo;
+    private String slotErrorInfo;
 
     @Enumerated(EnumType.STRING)
     private OperationState slotState;

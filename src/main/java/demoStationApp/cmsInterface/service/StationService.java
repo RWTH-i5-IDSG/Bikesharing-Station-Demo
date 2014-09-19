@@ -82,7 +82,7 @@ public class StationService {
             SlotDTO stationSlotDTO = SlotDTO.builder()
                     .slotManufacturerId(slot.getSlotManufacturerId())
                     .slotErrorCode(slot.getSlotErrorCode())
-                    .slotInfo(slot.getSlotInfo())
+                    .slotErrorInfo(slot.getSlotErrorInfo())
                     .slotState(slot.getSlotState())
                     .build();
 
@@ -92,7 +92,7 @@ public class StationService {
         StationStatusDTO stationStatusDTO = StationStatusDTO.builder()
                 .stationManufacturerId(station.getStationManufacturerId())
                 .stationErrorCode(station.getStationErrorCode())
-                .stationInfo(station.getStationInfo())
+                .stationErrorInfo(station.getStationErrorInfo())
                 .timestamp(new Date().getTime())
                 .slots(slots)
                 .build();

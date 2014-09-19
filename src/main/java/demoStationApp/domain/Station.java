@@ -30,7 +30,7 @@ public class Station {
     private String stationManufacturerId;
     private String firmwareVersion;
     private String stationErrorCode;
-    private String stationInfo;
+    private String stationErrorInfo;
 
     @Enumerated(EnumType.STRING)
     private OperationState stationState;

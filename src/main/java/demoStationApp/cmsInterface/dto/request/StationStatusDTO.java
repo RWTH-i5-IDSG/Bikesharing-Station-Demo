@@ -13,7 +13,7 @@ import java.util.List;
 public final class StationStatusDTO {
     private final String stationManufacturerId;
     private final String stationErrorCode;
-    private final String stationInfo;
+    private final String stationErrorInfo;
     private final Long timestamp;
     private final List<SlotDTO> slots;
 }

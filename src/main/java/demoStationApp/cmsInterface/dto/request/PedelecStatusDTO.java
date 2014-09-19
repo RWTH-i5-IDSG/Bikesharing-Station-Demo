@@ -12,7 +12,7 @@ import lombok.experimental.Builder;
 public final class PedelecStatusDTO {
     private final String pedelecmanufacturerId;
     private final String pedelecErrorCode;
-    private final String pedelecInfo;
+    private final String pedelecErrorInfo;
     private final OperationState pedelecState;
     private final Long timestamp;
 }

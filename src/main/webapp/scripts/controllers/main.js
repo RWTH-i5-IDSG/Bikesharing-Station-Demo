@@ -207,7 +207,7 @@ angular.module('demoStationApp')
 //
 //            pedelecStatusNotification.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
 //            pedelecStatusNotification.pedelecErrorCode = slot.pedelec.pedelecErrorCode;
-//            pedelecStatusNotification.pedelecInfo = slot.pedelec.pedelecInfo;
+//            pedelecStatusNotification.pedelecErrorInfo = slot.pedelec.pedelecErrorInfo;
 //            pedelecStatusNotification.pedelecState = slot.pedelec.pedelecState;
 //            pedelecStatusNotification.timestamp = new Date().getTime();
             var pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
