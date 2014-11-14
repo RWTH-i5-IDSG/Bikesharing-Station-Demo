@@ -10,5 +10,5 @@ import lombok.experimental.Builder;
 @Builder
 public final class AuthorizeDTO {
     private final Integer slotPosition;
-    private final String userId;
+    private final String cardId;
 }

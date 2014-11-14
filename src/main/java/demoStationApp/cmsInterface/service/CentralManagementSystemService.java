@@ -7,6 +7,7 @@ import demoStationApp.cmsInterface.dto.request.SlotDTO;
 import demoStationApp.cmsInterface.dto.response.BootConfirmationDTO;
 import demoStationApp.cmsInterface.dto.response.HeartbeatDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
+import demoStationApp.domain.OperationState;
 import demoStationApp.domain.Pedelec;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
@@ -49,11 +50,17 @@ public class CentralManagementSystemService {
                 slotDTO = SlotDTO.builder()
                         .slotManufacturerId(slot.getSlotManufacturerId())
                         .slotPosition(slot.getSlotPosition())
+                        .slotErrorCode("")
+                        .slotErrorInfo("")
+                        .slotState(OperationState.OPERATIVE)
                         .build();
             } else {
                 slotDTO = SlotDTO.builder()
                         .slotManufacturerId(slot.getSlotManufacturerId())
                         .slotPosition(slot.getSlotPosition())
+                        .slotErrorCode("")
+                        .slotErrorInfo("")
+                        .slotState(OperationState.OPERATIVE)
                         .pedelecManufacturerId(pedelec.getPedelecManufacturerId())
                         .build();
             }

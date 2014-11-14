@@ -49,21 +49,24 @@ public class StationRESTController {
     }
 
     @RequestMapping(value = "/stations/{manufacturerId}/authorize", method = RequestMethod.POST)
-    public AuthorizeConfirmationDTO authenticate(@RequestBody CustomerAuthorizeDTO customerAuthorizeDTO) throws RestClientException {
+    public AuthorizeConfirmationDTO authorize(@PathVariable String manufacturerId,
+                                              @RequestBody CustomerAuthorizeDTO customerAuthorizeDTO) throws RestClientException {
         log.info("Authorize: {}", customerAuthorizeDTO);
 
         return restTemplate.postForObject(AUTH_PATH, customerAuthorizeDTO, AuthorizeConfirmationDTO.class);
     }
 
-    @RequestMapping(value = "/stations/{manufacturerId}/takePedelec", method = RequestMethod.POST)
-    public void takeBike(@RequestBody StartTransactionDTO startTransactionDTO) {
+    @RequestMapping(value = "/stations/{manufacturerId}/takePedelec", method = RequestMethod.POST, produces = "application/json")
+    public void takeBike(@PathVariable String manufacturerId,
+                         @RequestBody StartTransactionDTO startTransactionDTO) throws RestClientException {
         log.info("Pedelec taken: {}", startTransactionDTO);
 
         transactionService.startTransaction(startTransactionDTO);
     }
 
     @RequestMapping(value = "/stations/{manufacturerId}/returnPedelec", method = RequestMethod.POST)
-    public void returnBike(@RequestBody StopTransactionDTO stopTransactionDTO) {
+    public void returnBike(@PathVariable String manufacturerId,
+                           @RequestBody StopTransactionDTO stopTransactionDTO) {
         log.info("Pedelec return: {}", stopTransactionDTO);
 
         transactionService.stopTransaction(stopTransactionDTO);

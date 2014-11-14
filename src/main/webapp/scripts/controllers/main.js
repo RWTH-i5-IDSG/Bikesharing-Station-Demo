@@ -60,13 +60,10 @@ angular.module('demoStationApp')
                 return;
             }
 
-//            $scope.user.userId = $scope.user.cardId;
-
-            delete $scope.user.userId;
 
             $http.post('/stations/' + $scope.demoStation.stationManufacturerId + '/authorize', $scope.user)
                 .success(function (data) {
-                    $scope.user.userId = data.userId;
+                    $scope.user.cardId = data.cardId;
                     $scope.authenticated = true;
                     showAlert('User is authorized', '');
                 }).error(function (data, status, headers, config) {
@@ -76,7 +73,7 @@ angular.module('demoStationApp')
 
         $scope.logout = function () {
             if ($scope.authenticated) {
-                $scope.user.userId = null;
+                $scope.user.cardId = null;
                 showAlert('Customer canceled operation', '');
             }
 
@@ -92,7 +89,7 @@ angular.module('demoStationApp')
         $scope.rent = function (slot) {
 
             var startTransaction = {};
-            startTransaction.userId = $scope.user.userId;
+            startTransaction.cardId = $scope.user.cardId;
             startTransaction.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
             startTransaction.stationManufacturerId = $scope.demoStation.stationManufacturerId;
             startTransaction.slotManufacturerId = slot.slotManufacturerId;
@@ -100,10 +97,10 @@ angular.module('demoStationApp')
 
             $http.post('/stations/' + $scope.demoStation.stationManufacturerId + '/takePedelec', startTransaction)
                 .success(function (data) {
-                    showAlert('User "' + $scope.user.userId + '" chose pedelec at slot ' + slot.slotPosition + '.', '');
+                    showAlert('User "' + $scope.user.cardId + '" chose pedelec at slot ' + slot.slotPosition + '.', '');
 
                     $scope.authenticated = false;
-                    $scope.user.userId = null;
+                    $scope.user.cardId = null;
                     showAlert('User is authorized', '');
 
                     $http.get('/stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {

@@ -26,24 +26,24 @@ public class TransactionService {
     private static final String STOP_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/transaction/stop";
 
     public void startTransaction(StartTransactionDTO startTransactionDTO) {
+        restTemplate.postForLocation(START_PATH, startTransactionDTO);
+
         Pedelec pedelec = pedelecRepository.findOne(startTransactionDTO.getPedelecManufacturerId());
         Slot slot = slotRepository.findOne(startTransactionDTO.getSlotManufacturerId());
         pedelec.setSlot(null);
         slot.setPedelec(null);
         slotRepository.save(slot);
         pedelecRepository.save(pedelec);
-
-        restTemplate.postForLocation(START_PATH, startTransactionDTO);
     }
 
     public void stopTransaction(StopTransactionDTO stopTransactionDTO) {
+        restTemplate.postForLocation(STOP_PATH, stopTransactionDTO);
+
         Pedelec pedelec = pedelecRepository.findOne(stopTransactionDTO.getPedelecManufacturerId());
         Slot slot = slotRepository.findOne(stopTransactionDTO.getSlotManufacturerId());
         pedelec.setSlot(slot);
         slot.setPedelec(pedelec);
         slotRepository.save(slot);
         pedelecRepository.save(pedelec);
-
-        restTemplate.postForLocation(STOP_PATH, stopTransactionDTO);
     }
 }

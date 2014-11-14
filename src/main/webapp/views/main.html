@@ -30,14 +30,14 @@
         </div>
         <div class="form-group" ng-class="{ 'has-error': authenticationForm.pin.$invalid && authenticationForm.pin.$dirty }">
             <label class="sr-only" for="pin" class="control-label">PIN</label>
-            <input name="pin" type="number" class="form-control" id="pin" ng-model="$parent.user.pin" placeholder="Enter PIN" required />
+            <input name="pin" type="text" class="form-control" id="pin" ng-model="$parent.user.pin" placeholder="Enter PIN" required />
         </div>
         <button class="btn btn-primary" ng-click="authenticate()">Authenticate</button>
-        <h5><kbd>CardId: 4234324 | PIN: 1234</kbd></h5>
+        <h5><kbd>CardId: c6717560-c69c-4915-b628-598cfc8b1e19 | PIN: 1234</kbd></h5>
     </form>
 
     <div ng-switch-when="true">
-        <h4>UserID: {{user.userId}}</h4>
+        <h4>CardID: {{user.cardId}}</h4>
         <button class="btn btn-danger btn-sm" ng-click="logout()">Cancel</button>
     </div>
 </div>
@@ -56,7 +56,7 @@
 <h3 ng-show="pedelecs.length > 0">Rented Pedelecs</h3>
 <div ng-repeat="pedelec in rentedPedelecs" class="well">
     <h5>Rented Pedelec: {{pedelec.pedelecManufacturerId}}</h5>
-    <!--<h5>Owner: {{pedelec.owner.userId}}</h5>-->
+    <!--<h5>Owner: {{pedelec.owner.userCardId}}</h5>-->
     <h5 ng-show="demoStation">Return Pedelec to Slot of Station "{{demoStation.stationManufacturerId}}"</h5>
         <button style="margin: 4px; width: 50px;" ng-repeat="slot in demoStation.slots | orderBy:'slotPosition'" ng-if="!slot.pedelec.pedelecManufacturerId" class="btn btn-warning" ng-click="return(pedelec, slot)">{{slot.slotPosition}}</button>
 </div>

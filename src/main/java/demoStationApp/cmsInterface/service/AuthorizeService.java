@@ -30,7 +30,7 @@ public class AuthorizeService {
         }
 
         slot.getPedelec().setSlot(null);
-        slot.getPedelec().setOwner(authorizeDTO.getUserId());
+        slot.getPedelec().setOwner(authorizeDTO.getCardId());
         pedelecRepository.save(slot.getPedelec());
 
         slot.setPedelec(null);

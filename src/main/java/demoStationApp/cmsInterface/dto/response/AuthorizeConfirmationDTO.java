@@ -1,11 +1,11 @@
 package demoStationApp.cmsInterface.dto.response;
 
-import lombok.Value;
+import lombok.Getter;
 
 /**
  * Created by swam on 21/08/14.
  */
-@Value
+@Getter
 public class AuthorizeConfirmationDTO {
-    private long userId;
+    private String cardId;
 }
