@@ -60,9 +60,10 @@ public class StationService {
 
     public void setStationOperationState(String stationManufacturerId,
                                          ChangeStationOperationStateDTO changeStationOperationStateDTO) throws CMSInterfaceException {
+
         Station station = this.getStation(stationManufacturerId);
 
-        if (changeStationOperationStateDTO.getSlotPosition() != null) {
+        if (changeStationOperationStateDTO.getSlotPosition() > 0) {
             Slot slot = slotRepository.findBySlotPositionAndStation(changeStationOperationStateDTO.getSlotPosition(), station);
             slot.setSlotState(changeStationOperationStateDTO.getState());
             slotRepository.save(slot);
