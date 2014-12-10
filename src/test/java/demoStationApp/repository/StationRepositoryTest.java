@@ -29,7 +29,6 @@ import java.util.UUID;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @DirtiesContext(classMode= DirtiesContext.ClassMode.AFTER_CLASS)
-//@ActiveProfiles("dev")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StationRepositoryTest {
 

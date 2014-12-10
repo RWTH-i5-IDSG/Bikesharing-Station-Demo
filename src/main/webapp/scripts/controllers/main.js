@@ -18,16 +18,17 @@ angular.module('demoStationApp')
 
 //        $scope.pedelecs = localStorageService.get('RentedPedelecs');
 
-        var URI = "http://localhost:8081/";
+        var URI = "/bikeman-station-demo/";
+//        var URI = "/";
 
-        $http.get("/stations").success(function (stations) {
+        $http.get(URI + "stations").success(function (stations) {
             console.log("Polling stations at " + new Date().toLocaleTimeString());
             $scope.demoStations = stations;
         });
 
         $interval(function () {
             if ($scope.demoStation) {
-                $http.get('/stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {
+                $http.get(URI + 'stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {
 //                    $scope.demoStation = station;
                     for (var i = 0; i < $scope.demoStations.length; i++) {
                         if ($scope.demoStations[i].stationManufacturerId == station.stationManufacturerId) {
@@ -61,7 +62,7 @@ angular.module('demoStationApp')
             }
 
 
-            $http.post('/stations/' + $scope.demoStation.stationManufacturerId + '/authorize', $scope.user)
+            $http.post(URI + 'stations/' + $scope.demoStation.stationManufacturerId + '/authorize', $scope.user)
                 .success(function (data) {
                     $scope.user.cardId = data.cardId;
                     $scope.authenticated = true;
@@ -79,7 +80,7 @@ angular.module('demoStationApp')
 
             $scope.authenticated = false;
 
-            $http.get("/stations/" + $scope.demoStation.stationManufacturerId + "/rentedPedelecs").success(function (rentedPedelecs) {
+            $http.get(URI + "stations/" + $scope.demoStation.stationManufacturerId + "/rentedPedelecs").success(function (rentedPedelecs) {
                 $scope.rentedPedelecs = rentedPedelecs;
             });
 
@@ -95,7 +96,7 @@ angular.module('demoStationApp')
             startTransaction.slotManufacturerId = slot.slotManufacturerId;
             startTransaction.timestamp = new Date().getTime();
 
-            $http.post('/stations/' + $scope.demoStation.stationManufacturerId + '/takePedelec', startTransaction)
+            $http.post(URI + 'stations/' + $scope.demoStation.stationManufacturerId + '/takePedelec', startTransaction)
                 .success(function (data) {
                     showAlert('User "' + $scope.user.cardId + '" chose pedelec at slot ' + slot.slotPosition + '.', '');
 
@@ -103,7 +104,7 @@ angular.module('demoStationApp')
                     $scope.user.cardId = null;
                     showAlert('User is authorized', '');
 
-                    $http.get('/stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {
+                    $http.get(URI + 'stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {
                         for (var i = 0; i < $scope.demoStations.length; i++) {
                             if ($scope.demoStations[i].stationManufacturerId == station.stationManufacturerId) {
                                 $scope.demoStations[i] = station;
@@ -111,7 +112,7 @@ angular.module('demoStationApp')
                             }
                         }
                     });
-                    $http.get("/stations/" + $scope.demoStation.stationManufacturerId + "/rentedPedelecs").success(function (rentedPedelecs) {
+                    $http.get(URI + "stations/" + $scope.demoStation.stationManufacturerId + "/rentedPedelecs").success(function (rentedPedelecs) {
                         $scope.rentedPedelecs = rentedPedelecs;
                     });
                 }).error(function (data, status, headers, config) {
@@ -129,9 +130,9 @@ angular.module('demoStationApp')
             stopTransaction.stationManufacturerId = $scope.demoStation.stationManufacturerId;
             stopTransaction.timestamp = new Date().getTime();
 
-            $http.post('/stations/' + $scope.demoStation.stationManufacturerId + '/returnPedelec', stopTransaction)
+            $http.post(URI + 'stations/' + $scope.demoStation.stationManufacturerId + '/returnPedelec', stopTransaction)
                 .success(function (data) {
-                    $http.get('/stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {
+                    $http.get(URI + 'stations/' + $scope.demoStation.stationManufacturerId).success(function (station) {
                         for (var i = 0; i < $scope.demoStations.length; i++) {
                             if ($scope.demoStations[i].stationManufacturerId == station.stationManufacturerId) {
                                 $scope.demoStations[i] = station;
@@ -139,7 +140,7 @@ angular.module('demoStationApp')
                             }
                         }
                     });
-                    $http.get("/stations/" + $scope.demoStation.stationManufacturerId + "/rentedPedelecs").success(function (rentedPedelecs) {
+                    $http.get(URI + "stations/" + $scope.demoStation.stationManufacturerId + "/rentedPedelecs").success(function (rentedPedelecs) {
                         $scope.rentedPedelecs = rentedPedelecs;
                     });
                     showAlert('Pedelec "' + pedelec.pedelecManufacturerId + '" returned to slot "' + slot.slotPosition + '"');
@@ -183,7 +184,7 @@ angular.module('demoStationApp')
                     alert('http error ' + status);
                 });
 
-                showAlert('Send "Boot Notification"', '');
+            showAlert('Send "Boot Notification"', '');
         };
 
         $scope.sendStationStatusNotification = function () {

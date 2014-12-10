@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = "/{stationManufacturerId}/cmsi/pedelecs", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/{stationManufacturerId}/pedelecs", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PedelecController {
 
     @Autowired private PedelecService pedelecService;
