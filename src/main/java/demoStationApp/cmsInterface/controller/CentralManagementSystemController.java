@@ -21,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/{stationManufacturerId}/cmsi", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/{stationManufacturerId}", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CentralManagementSystemController {
 
     @Autowired private CentralManagementSystemService centralManagementSystemService;
@@ -33,7 +33,7 @@ public class CentralManagementSystemController {
 
     @RequestMapping(value = "/reboot", method = RequestMethod.POST)
     public void reboot(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
-        log.debug("REBOOT INITIATED");
+        log.info("REBOOT INITIATED");
     }
 
     @RequestMapping(value = "/unlock/{slotPosition}", method = RequestMethod.POST)
@@ -51,12 +51,6 @@ public class CentralManagementSystemController {
     public void uploadLogs(@PathVariable String stationManufacturerId,
                            @RequestBody UploadLogsDTO uploadLogsDTO) throws CMSInterfaceException {
         // TODO
-    }
-
-    @RequestMapping(value = "/boot", method = RequestMethod.POST)
-    public void boot(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
-        log.debug("BOOT NOTIFICATION SENT");
-        centralManagementSystemService.sendBootNotification(stationManufacturerId);
     }
 
 }

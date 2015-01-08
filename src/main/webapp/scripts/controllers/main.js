@@ -174,7 +174,7 @@ angular.module('demoStationApp')
 //            });
 
             var stationManufacturerId = $scope.demoStation.stationManufacturerId;
-            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/boot";
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/sendBootNotification";
 
             $http.post(targetURI)
                 .success(function () {
@@ -188,7 +188,7 @@ angular.module('demoStationApp')
         };
 
         $scope.sendStationStatusNotification = function () {
-            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/sendStationStatusNotification";
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/sendStationStatusNotification";
             $http.post(targetURI)
                 .success(function () {
                     console.log('Status notification sent for station ' + $scope.demoStation.stationManufacturerId);
@@ -210,7 +210,7 @@ angular.module('demoStationApp')
 //            pedelecStatusNotification.timestamp = new Date().getTime();
             var pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
 
-            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/pedelecs/" + pedelecManufacturerId + "/sendPedelecStatusNotification";
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/pedelecs/" + pedelecManufacturerId + "/sendPedelecStatusNotification";
             $http.post(targetURI)
                 .success(function () {
                     console.log('Pedelec status notification sent for station ' + $scope.demoStation.stationManufacturerId);

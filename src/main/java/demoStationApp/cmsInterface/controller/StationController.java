@@ -40,9 +40,4 @@ public class StationController {
         stationService.setStationOperationState(stationManufacturerId, changeStationOperationStateDTO);
     }
 
-    @RequestMapping(value = "/sendStationStatusNotification", method = RequestMethod.POST)
-    public void sendStationStatusNotification(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
-        stationService.sendStationStatusNotification(stationManufacturerId);
-    }
-
 }

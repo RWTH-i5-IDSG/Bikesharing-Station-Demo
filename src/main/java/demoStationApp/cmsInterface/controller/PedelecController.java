@@ -22,17 +22,6 @@ public class PedelecController {
 
     @Autowired private PedelecService pedelecService;
 
-    @RequestMapping(value = "/{pedelecManufacturerId}/sendPedelecStatusNotification", method = RequestMethod.POST)
-    public void sendPedelecStatusNotification(@PathVariable String stationManufacturerId,
-                                              @PathVariable String pedelecManufacturerId) throws CMSInterfaceException {
-        pedelecService.sendPedelecStatusNotification(stationManufacturerId, pedelecManufacturerId);
-    }
-
-    @RequestMapping(value = "/sendChargingStatusNotification", method = RequestMethod.POST)
-    public void sendChargingStatusNotification(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
-        pedelecService.sendChargingStatusNotification(stationManufacturerId);
-    }
-
     @RequestMapping(value = "/{pedelecManufacturerId}/config", method = RequestMethod.POST)
     public void changePedelecConfiguration(@PathVariable String stationManufacturerId,
                                            @PathVariable String pedelecManufacturerId,

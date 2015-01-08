@@ -5,6 +5,10 @@ import demoStationApp.cmsInterface.dto.request.CustomerAuthorizeDTO;
 import demoStationApp.cmsInterface.dto.request.StartTransactionDTO;
 import demoStationApp.cmsInterface.dto.request.StopTransactionDTO;
 import demoStationApp.cmsInterface.dto.response.AuthorizeConfirmationDTO;
+import demoStationApp.cmsInterface.exception.CMSInterfaceException;
+import demoStationApp.cmsInterface.service.CentralManagementSystemService;
+import demoStationApp.cmsInterface.service.PedelecService;
+import demoStationApp.cmsInterface.service.StationService;
 import demoStationApp.domain.Pedelec;
 import demoStationApp.domain.Station;
 import demoStationApp.repository.PedelecRepository;
@@ -30,8 +34,16 @@ public class StationRESTController {
     @Autowired private TransactionService transactionService;
     @Autowired private PedelecRepository pedelecRepository;
     @Autowired private RestTemplate restTemplate;
+    @Autowired private CentralManagementSystemService centralManagementSystemService;
+    @Autowired private PedelecService pedelecService;
+    @Autowired private StationService stationService;
 
     private static final String AUTH_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/authorize";
+
+
+    /*
+     * Internal Communication
+     */
 
     @RequestMapping("/stations")
     public List<Station> getStations() {
@@ -47,6 +59,11 @@ public class StationRESTController {
     public List<Pedelec> getRentedPedelecs(@PathVariable String manufacturerId) {
         return pedelecRepository.findBySlotIsNull();
     }
+
+
+    /*
+     * Authorization, Start-, Stop-Transaction Requests
+     */
 
     @RequestMapping(value = "/stations/{manufacturerId}/authorize", method = RequestMethod.POST)
     public AuthorizeConfirmationDTO authorize(@PathVariable String manufacturerId,
@@ -70,6 +87,33 @@ public class StationRESTController {
         log.info("Pedelec return: {}", stopTransactionDTO);
 
         transactionService.stopTransaction(stopTransactionDTO);
+    }
+
+
+    /*
+     * Trigger Notification from Demo-Site
+     */
+
+    @RequestMapping(value = "/{stationManufacturerId}/sendBootNotification", method = RequestMethod.POST)
+    public void boot(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
+        log.debug("BOOT NOTIFICATION SENT");
+        centralManagementSystemService.sendBootNotification(stationManufacturerId);
+    }
+
+    @RequestMapping(value = "/{stationManufacturerId}/pedelecs/{pedelecManufacturerId}/sendPedelecStatusNotification", method = RequestMethod.POST)
+    public void sendPedelecStatusNotification(@PathVariable String stationManufacturerId,
+                                              @PathVariable String pedelecManufacturerId) throws CMSInterfaceException {
+        pedelecService.sendPedelecStatusNotification(stationManufacturerId, pedelecManufacturerId);
+    }
+
+    @RequestMapping(value = "/{stationManufacturerId}/sendChargingStatusNotification", method = RequestMethod.POST)
+    public void sendChargingStatusNotification(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
+        pedelecService.sendChargingStatusNotification(stationManufacturerId);
+    }
+
+    @RequestMapping(value = "/{stationManufacturerId}/sendStationStatusNotification", method = RequestMethod.POST)
+    public void sendStationStatusNotification(@PathVariable String stationManufacturerId) throws CMSInterfaceException {
+        stationService.sendStationStatusNotification(stationManufacturerId);
     }
 
 }

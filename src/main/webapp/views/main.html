@@ -22,7 +22,7 @@
 </div>
 <br>
 
-<div class="well" ng-switch="authenticated" ng-show="demoStation">
+<div class="well" ng-switch="authenticated" ng-show="demoStation && demoStation.stationState === 'OPERATIVE'">
     <form ng-switch-when="false" name="$parent.authenticationForm" role="form" class="form-inline" novalidate>
         <div class="form-group" ng-class="{ 'has-error': authenticationForm.cardId.$invalid && authenticationForm.cardId.$dirty }">
             <label class="sr-only" for="cardId" class="control-label">Card Number: </label>
@@ -43,8 +43,9 @@
 </div>
 
 <div class="well" ng-if="demoStation">
-    <h5>Rent pedelec from Slot</h5>
-    <button style="margin: 4px; width: 50px; " ng-repeat="slot in demoStation.slots | orderBy : 'slotPosition'" ng-disabled="!slot.pedelec.pedelecManufacturerId || user.pedelec.pedelecManufacturerId || !authenticated || slot.slotState == 'INOPERATIVE' || slot.pedelec.pedelecState == 'INOPERATIVE'" ng-class="{'btn-success':slot.pedelec.pedelecManufacturerId, redborder: slot.slotState == 'INOPERATIVE' || slot.pedelec.pedelecState == 'INOPERATIVE'}" class="btn" ng-click="rent(slot)">{{slot.slotPosition}}</button>
+    <h5 ng-show="demoStation.stationState === 'OPERATIVE'">Rent pedelec from Slot</h5>
+    <h5 ng-show="demoStation.stationState === 'INOPERATIVE'">Station is out of order. (INOPERATIVE)</h5>
+    <button style="margin: 4px; width: 50px; " ng-repeat="slot in demoStation.slots | orderBy : 'slotPosition'" ng-disabled="!slot.pedelec.pedelecManufacturerId || user.pedelec.pedelecManufacturerId || !authenticated || demoStation.stationState === 'INOPERATIVE' || slot.slotState === 'INOPERATIVE' || slot.pedelec.pedelecState === 'INOPERATIVE'" ng-class="{'btn-success':slot.pedelec.pedelecManufacturerId, redborder: slot.slotState == 'INOPERATIVE' || slot.pedelec.pedelecState == 'INOPERATIVE'}" class="btn" ng-click="rent(slot)">{{slot.slotPosition}}</button>
     <br>
     <br>
     <div class="text-right">
@@ -53,6 +54,11 @@
         <span class="label redborder" style="color: black;">slot disabled</span>
     </div>
 </div>
+
+<div class="well" ng-if="demoStation && demoStation.stationState === 'INOPERATIVE'">
+    <h5>Station is out of order. (INOPERATIVE)</h5>
+</div>
+
 <hr ng-show="pedelecs.length > 0">
 <h3 ng-show="pedelecs.length > 0">Rented Pedelecs</h3>
 <div ng-repeat="pedelec in rentedPedelecs" class="well">
