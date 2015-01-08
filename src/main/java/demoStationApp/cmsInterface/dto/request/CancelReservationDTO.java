@@ -1,6 +1,9 @@
 package demoStationApp.cmsInterface.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Builder;
 
 /**
@@ -8,7 +11,9 @@ import lombok.experimental.Builder;
  */
 
 @Builder
-@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CancelReservationDTO {
 
     private Long reservationId;
