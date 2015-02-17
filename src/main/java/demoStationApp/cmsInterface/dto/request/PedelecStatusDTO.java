@@ -15,7 +15,7 @@ import lombok.experimental.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PedelecStatusDTO {
-    private String pedelecmanufacturerId;
+    private String pedelecManufacturerId;
     private String pedelecErrorCode;
     private String pedelecErrorInfo;
     private OperationState pedelecState;

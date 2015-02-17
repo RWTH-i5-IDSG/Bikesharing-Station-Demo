@@ -68,7 +68,7 @@ public class PedelecService {
         Pedelec pedelec = pedelecRepository.findOne(pedelecManufacturerId);
 
         PedelecStatusDTO dto = PedelecStatusDTO.builder()
-                .pedelecmanufacturerId(pedelec.getPedelecManufacturerId())
+                .pedelecManufacturerId(pedelec.getPedelecManufacturerId())
                 .pedelecState(pedelec.getPedelecState())
                 .pedelecErrorInfo(pedelec.getPedelecErrorInfo())
                 .pedelecErrorCode(pedelec.getPedelecErrorCode())
