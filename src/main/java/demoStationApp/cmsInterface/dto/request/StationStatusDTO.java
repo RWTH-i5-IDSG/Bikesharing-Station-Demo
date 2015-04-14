@@ -1,5 +1,6 @@
 package demoStationApp.cmsInterface.dto.request;
 
+import demoStationApp.domain.OperationState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class StationStatusDTO {
     private String stationManufacturerId;
     private String stationErrorCode;
     private String stationErrorInfo;
+    private OperationState stationState;
     private Long timestamp;
     private List<SlotDTO> slots;
 }

@@ -6,6 +6,7 @@ import demoStationApp.cmsInterface.dto.request.SlotDTO;
 import demoStationApp.cmsInterface.dto.request.StationConfigurationDTO;
 import demoStationApp.cmsInterface.dto.request.StationStatusDTO;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
+import demoStationApp.domain.OperationState;
 import demoStationApp.domain.Slot;
 import demoStationApp.domain.Station;
 import demoStationApp.repository.SlotRepository;
@@ -94,6 +95,7 @@ public class StationService {
                 .stationManufacturerId(station.getStationManufacturerId())
                 .stationErrorCode(station.getStationErrorCode())
                 .stationErrorInfo(station.getStationErrorInfo())
+                .stationState(OperationState.OPERATIVE)
                 .timestamp(new Date().getTime())
                 .slots(slots)
                 .build();

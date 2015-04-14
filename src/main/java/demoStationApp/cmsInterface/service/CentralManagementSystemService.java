@@ -71,7 +71,7 @@ public class CentralManagementSystemService {
         BootNotificationDTO bootNotificationDTO = BootNotificationDTO.builder()
                 .stationManufacturerId(station.getStationManufacturerId())
                 .firmwareVersion(station.getFirmwareVersion())
-                .slotDTOs(slots)
+                .slots(slots)
                 .build();
 
         BootConfirmationDTO bootConfirmationDTO = this.sendBoot(bootNotificationDTO);

@@ -41,7 +41,7 @@ public class NotificationService {
         BootNotificationDTO bootNotificationDTO = BootNotificationDTO.builder()
             .stationManufacturerId(stationManufacturerId)
             .firmwareVersion("1.0")
-            .slotDTOs(null)
+            .slots(slotDTOs)
             .build();
 
         return bootNotificationDTO;

@@ -8,5 +8,5 @@ import lombok.Getter;
 @Getter
 public class CustomerAuthorizeDTO {
     private String cardId;
-    private String pin;
+    private String cardPin;
 }

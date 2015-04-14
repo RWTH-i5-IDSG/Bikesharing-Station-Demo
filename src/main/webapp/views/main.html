@@ -28,9 +28,9 @@
             <label class="sr-only" for="cardId" class="control-label">Card Number: </label>
             <input name="cardId" type="text" class="form-control" id="cardId" ng-model="$parent.user.cardId" required placeholder="Enter CardId" />
         </div>
-        <div class="form-group" ng-class="{ 'has-error': authenticationForm.pin.$invalid && authenticationForm.pin.$dirty }">
-            <label class="sr-only" for="pin" class="control-label">PIN</label>
-            <input name="pin" type="text" class="form-control" id="pin" ng-model="$parent.user.pin" placeholder="Enter PIN" required />
+        <div class="form-group" ng-class="{ 'has-error': authenticationForm.cardPin.$invalid && authenticationForm.cardPin.$dirty }">
+            <label class="sr-only" for="cardPin" class="control-label">PIN</label>
+            <input name="cardPin" type="text" class="form-control" id="cardPin" ng-model="$parent.user.cardPin" placeholder="Enter PIN" required />
         </div>
         <button class="btn btn-primary" ng-click="authenticate()">Authenticate</button>
         <h5><kbd>CardId: c6717560-c69c-4915-b628-598cfc8b1e19 | PIN: 1234</kbd></h5>
