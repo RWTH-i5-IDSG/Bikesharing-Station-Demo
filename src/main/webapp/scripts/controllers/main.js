@@ -20,6 +20,7 @@ angular.module('demoStationApp')
 
         var URI = "/bikeman-station-demo/";
 //        var URI = "/";
+        //var URI = "/bikeman-station-demo/";
 
         $http.get(URI + "stations").success(function (stations) {
             console.log("Polling stations at " + new Date().toLocaleTimeString());
@@ -94,7 +95,7 @@ angular.module('demoStationApp')
             startTransaction.pedelecManufacturerId = slot.pedelec.pedelecManufacturerId;
             startTransaction.stationManufacturerId = $scope.demoStation.stationManufacturerId;
             startTransaction.slotManufacturerId = slot.slotManufacturerId;
-            startTransaction.timestamp = new Date().getTime();
+            startTransaction.timestamp = Math.floor(Date.now() / 1000);
 
             $http.post(URI + 'stations/' + $scope.demoStation.stationManufacturerId + '/takePedelec', startTransaction)
                 .success(function (data) {
@@ -128,7 +129,7 @@ angular.module('demoStationApp')
             stopTransaction.pedelecManufacturerId = pedelec.pedelecManufacturerId;
             stopTransaction.slotManufacturerId = slot.slotManufacturerId;
             stopTransaction.stationManufacturerId = $scope.demoStation.stationManufacturerId;
-            stopTransaction.timestamp = new Date().getTime();
+            stopTransaction.timestamp = Math.floor(Date.now() / 1000);
 
             $http.post(URI + 'stations/' + $scope.demoStation.stationManufacturerId + '/returnPedelec', stopTransaction)
                 .success(function (data) {
