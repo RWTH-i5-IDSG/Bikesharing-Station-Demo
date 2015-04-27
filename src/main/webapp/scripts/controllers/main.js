@@ -18,9 +18,8 @@ angular.module('demoStationApp')
 
 //        $scope.pedelecs = localStorageService.get('RentedPedelecs');
 
-        var URI = "/bikeman-station-demo/";
-//        var URI = "/";
         //var URI = "/bikeman-station-demo/";
+        var URI = "/";
 
         $http.get(URI + "stations").success(function (stations) {
             console.log("Polling stations at " + new Date().toLocaleTimeString());
@@ -62,14 +61,18 @@ angular.module('demoStationApp')
                 return;
             }
 
-
             $http.post(URI + 'stations/' + $scope.demoStation.stationManufacturerId + '/authorize', $scope.user)
                 .success(function (data) {
+                    if (data.accountState === 'HAS_PEDELEC') {
+                        showError("Sorry guy, you've already borrowed a pedelec!");
+                        return;
+                    }
+
                     $scope.user.cardId = data.cardId;
                     $scope.authenticated = true;
                     showAlert('User is authorized', '');
                 }).error(function (data, status, headers, config) {
-                    alert('Authentication Error.');
+                    showError('Authentication Error.');
                 });
         };
 
@@ -156,6 +159,9 @@ angular.module('demoStationApp')
             $alert({container: '.topalert', title: title, content: content, placement: 'top-right', type: 'info', show: true, duration: 3});
         };
 
+        var showError = function (title, content) {
+            $alert({container: '.topalert', title: title, content: content, placement: 'top-right', type: 'danger', show: true, duration: 3});
+        };
 
         $scope.sendBootNotification = function () {
 //            var bootNotification = {};

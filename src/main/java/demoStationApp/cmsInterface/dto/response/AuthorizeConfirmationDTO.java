@@ -8,4 +8,5 @@ import lombok.Getter;
 @Getter
 public class AuthorizeConfirmationDTO {
     private String cardId;
+    private String accountState;
 }
