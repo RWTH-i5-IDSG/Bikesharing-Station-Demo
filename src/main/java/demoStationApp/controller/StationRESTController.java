@@ -16,6 +16,8 @@ import demoStationApp.repository.StationRepository;
 import demoStationApp.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,7 +72,10 @@ public class StationRESTController {
                                               @RequestBody CustomerAuthorizeDTO customerAuthorizeDTO) throws RestClientException {
         log.info("Authorize: {}", customerAuthorizeDTO);
 
-        return restTemplate.postForObject(AUTH_PATH, customerAuthorizeDTO, AuthorizeConfirmationDTO.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("STATION-ID", manufacturerId);
+        HttpEntity<CustomerAuthorizeDTO> entity = new HttpEntity<>(customerAuthorizeDTO, headers);
+        return restTemplate.postForObject(AUTH_PATH, entity, AuthorizeConfirmationDTO.class);
     }
 
     @RequestMapping(value = "/stations/{manufacturerId}/takePedelec", method = RequestMethod.POST, produces = "application/json")

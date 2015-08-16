@@ -18,8 +18,8 @@ angular.module('demoStationApp')
 
 //        $scope.pedelecs = localStorageService.get('RentedPedelecs');
 
-        //var URI = "/bikeman-station-demo/";
-        var URI = "/";
+        var URI = "/bikeman-station-demo/";
+        //var URI = "/";
 
         $http.get(URI + "stations").success(function (stations) {
             console.log("Polling stations at " + new Date().toLocaleTimeString());
@@ -239,7 +239,7 @@ angular.module('demoStationApp')
 //            chargingStatusNotification.meterValue = slot.pedelec.meterValue;
 //            chargingStatusNotification.battery = slot.pedelec.battery;
 
-            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/cmsi/pedelecs/sendChargingStatusNotification";
+            var targetURI = URI + $scope.demoStation.stationManufacturerId + "/sendChargingStatusNotification";
             $http.post(targetURI)
                 .success(function () {
                     console.log('Pedelec charging status notification sent for station ' + $scope.demoStation.stationManufacturerId);
@@ -248,7 +248,7 @@ angular.module('demoStationApp')
                     alert('http error ' + status);
                 });
 
-            showAlert('Send "Charging Status Notification" for Pedelec "' + slot.pedelec.pedelecManufacturerId + '"');
+            showAlert('Send "Charging Status Notification"');
         };
 
     });

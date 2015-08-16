@@ -1,10 +1,7 @@
 package demoStationApp.cmsInterface.service;
 
 import demoStationApp.ApplicationConfig;
-import demoStationApp.cmsInterface.dto.request.ChangeStationOperationStateDTO;
-import demoStationApp.cmsInterface.dto.request.SlotDTO;
-import demoStationApp.cmsInterface.dto.request.StationConfigurationDTO;
-import demoStationApp.cmsInterface.dto.request.StationStatusDTO;
+import demoStationApp.cmsInterface.dto.request.*;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.domain.OperationState;
 import demoStationApp.domain.Slot;
@@ -13,6 +10,8 @@ import demoStationApp.repository.SlotRepository;
 import demoStationApp.repository.StationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -117,7 +116,11 @@ public class StationService {
 
     private void sendStationStatus(StationStatusDTO dto) {
         try {
-            String response = restTemplate.postForObject(STATION_STATUS_PATH, dto, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("STATION-ID", dto.getStationManufacturerId());
+            HttpEntity<StationStatusDTO> entity = new HttpEntity<StationStatusDTO>(dto, headers);
+
+            String response = restTemplate.postForObject(STATION_STATUS_PATH, entity, String.class);
             log.debug(response);
         } catch (RestClientException e) {
             log.error("Exception occurred", e);

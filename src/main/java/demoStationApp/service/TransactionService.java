@@ -8,6 +8,8 @@ import demoStationApp.domain.Slot;
 import demoStationApp.repository.PedelecRepository;
 import demoStationApp.repository.SlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,7 +28,10 @@ public class TransactionService {
     private static final String STOP_PATH = ApplicationConfig.BACKEND_BASE_PATH + "/psi/transaction/stop";
 
     public void startTransaction(StartTransactionDTO startTransactionDTO) {
-        restTemplate.postForLocation(START_PATH, startTransactionDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("STATION-ID", startTransactionDTO.getStationManufacturerId());
+        HttpEntity<StartTransactionDTO> entity = new HttpEntity<StartTransactionDTO>(startTransactionDTO, headers);
+        restTemplate.postForLocation(START_PATH, entity);
 
         Pedelec pedelec = pedelecRepository.findOne(startTransactionDTO.getPedelecManufacturerId());
         Slot slot = slotRepository.findOne(startTransactionDTO.getSlotManufacturerId());
@@ -37,7 +42,10 @@ public class TransactionService {
     }
 
     public void stopTransaction(StopTransactionDTO stopTransactionDTO) {
-        restTemplate.postForLocation(STOP_PATH, stopTransactionDTO);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("STATION-ID", stopTransactionDTO.getStationManufacturerId());
+        HttpEntity<StopTransactionDTO> entity = new HttpEntity<StopTransactionDTO>(stopTransactionDTO, headers);
+        restTemplate.postForLocation(STOP_PATH, entity);
 
         Pedelec pedelec = pedelecRepository.findOne(stopTransactionDTO.getPedelecManufacturerId());
         Slot slot = slotRepository.findOne(stopTransactionDTO.getSlotManufacturerId());

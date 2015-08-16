@@ -1,15 +1,14 @@
 package demoStationApp.cmsInterface.service;
 
 import demoStationApp.ApplicationConfig;
-import demoStationApp.cmsInterface.dto.request.ChangePedelecOperationStateDTO;
-import demoStationApp.cmsInterface.dto.request.ChargingStatusDTO;
-import demoStationApp.cmsInterface.dto.request.PedelecConfigurationDTO;
-import demoStationApp.cmsInterface.dto.request.PedelecStatusDTO;
+import demoStationApp.cmsInterface.dto.request.*;
 import demoStationApp.cmsInterface.exception.CMSInterfaceException;
 import demoStationApp.domain.Pedelec;
 import demoStationApp.repository.PedelecRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -75,12 +74,12 @@ public class PedelecService {
                 .timestamp(new Date().getTime())
                 .build();
 
-        this.sendPedelecStatus(dto);
+        this.sendPedelecStatus(dto, stationManufacturerId);
     }
 
     public void sendChargingStatusNotification(String stationManufacturerId) throws CMSInterfaceException {
         List<ChargingStatusDTO> dtoList = centralService.provideChargingStatus(stationManufacturerId);
-        this.sendChargingStatus(dtoList);
+        this.sendChargingStatus(dtoList, stationManufacturerId);
     }
 
     // -------------------------------------------------------------------------
@@ -95,18 +94,26 @@ public class PedelecService {
         return pedelec;
     }
 
-    private void sendPedelecStatus(PedelecStatusDTO dto) {
+    private void sendPedelecStatus(PedelecStatusDTO dto, String stationManufacturerId) {
         try {
-            String response = restTemplate.postForObject(PEDELEC_STATUS_PATH, dto, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("STATION-ID", stationManufacturerId);
+            HttpEntity<PedelecStatusDTO> entity = new HttpEntity<PedelecStatusDTO>(dto, headers);
+
+            String response = restTemplate.postForObject(PEDELEC_STATUS_PATH, entity, String.class);
             log.debug(response);
         } catch (RestClientException e) {
             log.error("Exception occurred", e);
         }
     }
 
-    private void sendChargingStatus(List<ChargingStatusDTO> dtoList) {
+    private void sendChargingStatus(List<ChargingStatusDTO> dtoList, String stationManufacturerId) {
         try {
-            String response = restTemplate.postForObject(CHARGING_STATUS_PATH, dtoList, String.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("STATION-ID", stationManufacturerId);
+            HttpEntity<List<ChargingStatusDTO>> entity = new HttpEntity<List<ChargingStatusDTO>>(dtoList, headers);
+
+            String response = restTemplate.postForObject(CHARGING_STATUS_PATH, entity, String.class);
             log.debug(response);
         } catch (RestClientException e) {
             log.error("Exception occurred", e);
