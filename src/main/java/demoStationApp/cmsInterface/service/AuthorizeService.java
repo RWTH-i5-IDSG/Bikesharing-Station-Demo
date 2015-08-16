@@ -11,10 +11,12 @@ import demoStationApp.repository.PedelecRepository;
 import demoStationApp.repository.SlotRepository;
 import demoStationApp.repository.StationRepository;
 import demoStationApp.service.TransactionService;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -42,7 +44,7 @@ public class AuthorizeService {
                         .pedelecManufacturerId(pedelec.getPedelecManufacturerId())
                         .slotManufacturerId(slot.getSlotManufacturerId())
                         .stationManufacturerId(stationManufacturerId)
-                        .timestamp(new Date().getTime())
+                        .timestamp(new LocalDateTime().now().toDateTime().getMillis()/1000)
                         .build();
 
                 transactionService.startTransaction(transactionDTO);
